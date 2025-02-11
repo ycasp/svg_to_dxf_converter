@@ -171,4 +171,4 @@ cython_debug/
 .pypirc
 
 # dxf file outputs
-src/dxf file
+src/dxf_files/
