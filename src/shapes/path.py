@@ -3,7 +3,7 @@ from svgpathtools.path import Line as svgLine
 from svgpathtools.path import CubicBezier, QuadraticBezier, Arc
 from svgpathtools import parse_path
 
-from src.svg_handler import change_svg_to_dxf_coordinate
+from src.utilities import change_svg_to_dxf_coordinate
 
 
 class Path:

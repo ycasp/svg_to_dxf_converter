@@ -2,7 +2,7 @@ import math
 import re
 import numpy as np
 
-from src.svg_handler import change_svg_to_dxf_coordinate
+from src.utilities import change_svg_to_dxf_coordinate
 
 
 class Ellipse:
