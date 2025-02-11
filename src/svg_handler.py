@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 
-from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line
+from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path
 
 
 def read_svg_file(name):
@@ -121,7 +121,7 @@ def scale_file(root, new_width, new_height):
             case '{http://www.w3.org/2000/svg}polygone':
                 print(element.tag, element.attrib)
             case '{http://www.w3.org/2000/svg}path':
-                print(element.tag, element.attrib)
+                scale_path(element, scale_x, scale_y)
             case _:
                 pass #TODO proper error handling
 

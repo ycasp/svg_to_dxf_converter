@@ -1,3 +1,6 @@
+from svgpathtools import parse_path
+
+
 def change_svg_to_dxf_coordinate(y, height):
     """
     Changes the svg coordinates to cartesian coordinates (y-axis in svg is from top to down).
@@ -87,4 +90,7 @@ def scale_line(element, scale_x, scale_y):
     element.set('y2', str(new_y2))
 
 def scale_path(element, scale_x, scale_y):
-    print('tbd')
+    path = element.attrib.get('d')
+    parsed_path = parse_path(path)
+    scaled_path = parsed_path.scaled(scale_x, scale_y)
+    element.set('d', scaled_path.d())
