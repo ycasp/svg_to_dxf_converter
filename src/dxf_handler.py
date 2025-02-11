@@ -54,7 +54,7 @@ def write_dxf(root, filename):
                 path.draw_svg_path(msp, height)
             case _:
                 # print('nothing:', element.tag, element.attrib)
-                pass
+                pass # TODO porper error handling
 
-    doc.saveas("dxf files/" + filename + ".dxf")
+    doc.saveas("dxf_files/" + filename + ".dxf")
 
