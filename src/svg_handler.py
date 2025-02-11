@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ElementTree
 
 from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path
 
@@ -16,7 +16,7 @@ def read_svg_file(name):
     file_path = name
 
     # Parse the SVG file
-    tree = ET.parse(file_path)
+    tree = ElementTree.parse(file_path)
     root = tree.getroot()
 
     # Print the root tag (should be <svg>)

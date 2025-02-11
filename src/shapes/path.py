@@ -44,17 +44,9 @@ class Path:
                              end=(segment.end.real, change_svg_to_dxf_coordinate(segment.end.imag, height)))
             elif isinstance(segment, CubicBezier):
                 # Approximate Cubic Bézier curve with a polyline
-                """ 
-                bezier_points = [segment.start, segment.control1, segment.control2, segment.end]
-                msp.add_lwpolyline([(p.real, change_svg_to_dxf_coordinate(p.imag, height)) for p in bezier_points], close=False)
-                """
                 self.approximate_cubic_bezier_curve(segment, msp, height)
             elif isinstance(segment, QuadraticBezier):
                 # Approximate Quadratic Bézier curve with a polyline
-                """
-                bezier_points = [segment.start, segment.control, segment.end]
-                msp.add_lwpolyline([(p.real, change_svg_to_dxf_coordinate(p.imag, height)) for p in bezier_points], close=False)
-                """
                 self.approximate_quadratic_bezier_curve(segment, msp, height)
             elif isinstance(segment, Arc):
                 # Add an ARC for SVG Arc segment

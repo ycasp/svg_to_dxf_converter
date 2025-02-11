@@ -90,7 +90,7 @@ def rotate_counterclockwise_around_svg_origin(x, y, rot_angle, height):
     :param y: y-coordinate of the point (in cartesian coordinates)
     :param rot_angle: rotation angle in degree
     :param height: height of the svg file
-    :return: (x,y) (tuple) of the roated point
+    :return: (x,y) (tuple) of the rotated point
     """
     # rot_angle is in degree (from svg file) - transform it to radian
     rot_angle_rad = rot_angle * math.pi / 180
