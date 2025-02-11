@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 
-from src.utilities import scale_rectangle
+from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line
+
 
 def read_svg_file(name):
     """
@@ -110,13 +111,13 @@ def scale_file(root, new_width, new_height):
     for element in root.iter():
         match element.tag:
             case '{http://www.w3.org/2000/svg}circle':
-                print(element.tag, element.attrib)
+                scale_circle(element, scale_x, scale_y)
             case '{http://www.w3.org/2000/svg}ellipse':
-                print(element.tag, element.attrib)
+                scale_ellipse(element, scale_x, scale_y)
             case '{http://www.w3.org/2000/svg}rect':
                 scale_rectangle(element, scale_x, scale_y)
             case '{http://www.w3.org/2000/svg}line':
-                print(element.tag, element.attrib)
+                scale_line(element, scale_x, scale_y)
             case '{http://www.w3.org/2000/svg}polygone':
                 print(element.tag, element.attrib)
             case '{http://www.w3.org/2000/svg}path':

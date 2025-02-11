@@ -36,3 +36,55 @@ def scale_rectangle(element, scale_x, scale_y):
     ry = element.attrib.get('ry')
     if ry is not None and ry != 0:
         element.set('ry', str(float(ry) * scale_y))
+
+def scale_circle(element, scale_x, scale_y):
+    # scale cx - center of circle x-coordinate
+    new_x = float(element.attrib.get('cx')) * scale_x
+    element.set('cx', str(new_x))
+
+    # scale cy - center of circle y-coordinate
+    new_y = float(element.attrib.get('cy')) * scale_y
+    element.set('cy', str(new_y))
+
+    # scale r - radius
+    new_r = float(element.attrib.get('r')) * scale_x
+    element.set('r', str(new_r))
+
+def scale_ellipse(element, scale_x, scale_y):
+    # scale cx - center of ellipse x-coordinate
+    new_x = float(element.attrib.get('cx')) * scale_x
+    element.set('cx', str(new_x))
+
+    # scale cy - center of ellipse y-coordinate
+    new_y = float(element.attrib.get('cy')) * scale_y
+    element.set('cy', str(new_y))
+
+    # scale rx - radius of ellipse x-direction
+    rx = element.attrib.get('rx')
+    if rx is not None and rx != 0:
+        element.set('rx', str(float(rx) * scale_x))
+
+    # scale ry - radius of ellipse in y-direction
+    ry = element.attrib.get('ry')
+    if ry is not None and ry != 0:
+        element.set('ry', str(float(ry) * scale_y))
+
+def scale_line(element, scale_x, scale_y):
+    # scale x1 - x-coord of starting point of line
+    new_x1 = float(element.attrib.get('x1')) * scale_x
+    element.set('x1', str(new_x1))
+
+    # scale y1 - y-cord of starting point of line
+    new_y1 = float(element.attrib.get('y1')) * scale_y
+    element.set('y1', str(new_y1))
+
+    # scale x2 - x-coord of end point of line
+    new_x2 = float(element.attrib.get('x2')) * scale_x
+    element.set('x2', str(new_x2))
+
+    # scale y2 - y-coord of end point of line
+    new_y2 = float(element.attrib.get('y2')) * scale_y
+    element.set('y2', str(new_y2))
+
+def scale_path(element, scale_x, scale_y):
+    print('tbd')
