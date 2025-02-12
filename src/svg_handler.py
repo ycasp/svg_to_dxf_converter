@@ -98,6 +98,14 @@ def print_root(root):
 
 
 def scale_file(root, new_width, new_height):
+    """
+    Scales all figures in a svg file. Changes the attributes in the tree.
+
+    :param root: tree with svg figures
+    :param new_width: new width in mm
+    :param new_height: new height in mm
+    :return: scaled svg content in a root
+    """
     # calculate scaling in x/y-direction
     scale_x = new_width / get_svg_width(root)
     scale_y = new_height / get_svg_height(root)
