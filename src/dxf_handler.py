@@ -3,6 +3,7 @@ from src.shapes.circle import Circle
 from src.shapes.ellipse import Ellipse
 from src.shapes.line import Line
 from src.shapes.path import Path
+from src.shapes.polygon import Polygon
 from src.shapes.rectangle import Rectangle
 from src.svg_handler import get_svg_height
 
@@ -46,8 +47,9 @@ def write_dxf(root, filename):
                             float(element.get('x2')), float(element.get('y2')), height)
                 line.draw_dxf_line(msp)
                 # print('line:' , element.tag, element.attrib)
-            case '{http://www.w3.org/2000/svg}polygone':
-                print('polygone: ', element.tag, element.attrib)
+            case '{http://www.w3.org/2000/svg}polygon':
+                polygon = Polygon(element.get('points'), height)
+                polygon.draw_dxf_polygon(msp)
             case '{http://www.w3.org/2000/svg}path':
                 # print('path:', element.tag, element.attrib)
                 path = Path(element.get('d'))
