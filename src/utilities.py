@@ -132,10 +132,24 @@ def scale_path(element, scale_x, scale_y):
 
     :param element: svg element, in this case path
     :param scale_x: factor for scaling in x direction
-    :param scale_y: factor for scaling in y direction
+    :param scale_y: factor for scaling in x direction
     :return: -
     """
     path = element.attrib.get('d')
     parsed_path = parse_path(path)
     scaled_path = parsed_path.scaled(scale_x, scale_y)
     element.set('d', scaled_path.d())
+
+def scale_polygon(element, scale_x, scale_y):
+    """
+    Scales a svg polygon with scale_x and scale_y.
+    Write the scaled polygon back to the tree
+    :param element: svg element, in this case polygon
+    :param scale_x: factor for scaling in x direction
+    :param scale_y: factor for scaling in x direction
+    :return: -
+    """
+    points = element.get("points")
+    scaled_points = [f"{float(p.split(',')[0]) * scale_x},{float(p.split(',')[1]) * scale_y}"
+                for p in points.strip().split()]
+    element.set("points", " ".join(scaled_points))
