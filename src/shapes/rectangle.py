@@ -87,8 +87,6 @@ class Rectangle:
             self.draw_rounded_rectangle(msp, height)
         elif self.rx != 0 and self.ry != 0:
             self.draw_rounded_rectangle(msp, height)
-        else:
-            print("unknown case in rectangle rounded corners")
 
     def draw_rounded_rectangle(self, msp, height):
         # ensure that rx/ry are only half of width / height
