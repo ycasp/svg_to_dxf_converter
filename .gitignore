@@ -172,3 +172,7 @@ cython_debug/
 
 # dxf file outputs
 src/dxf_files/
+
+# coverage reports
+htmlcov/
+.coverage
