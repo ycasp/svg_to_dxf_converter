@@ -1,5 +1,9 @@
 from svgpathtools import parse_path
+import numpy as np
+import math
+import re
 
+# svg transformation functions
 
 def change_svg_to_dxf_coordinate(y, height):
     """
@@ -10,6 +14,34 @@ def change_svg_to_dxf_coordinate(y, height):
     :return: y coordinate in cartesian coordinate
     """
     return (-1) * y + height
+
+# exports rotation angle (in degree!!) from transformation-string of svg ellipse
+def export_rotation(transformation):
+        """
+        Exports the rotation angle (in degree) given in the transformation message.
+        If none is given, the method returns 0.
+
+        :param transformation: transformation message of the svg object
+        :return: rotation angle given in the transformation message, if none is given, it returns 0
+        """
+        match = re.search(r'rotate\(([-\d.]+)', transformation)
+        if match:
+            return float(match.group(1))  # Extract the angle as a float
+        return 0  # Return 0 if no rotation is found
+
+def rotate_clockwise_around_svg_origin(x, y, rot_angle, height):
+    """
+    Rotate a point x,y counterclockwise around the moved svg-origin (0, height).
+    :param x: x-coordinate of point to be rotated
+    :param y: y-coordinate of point to be rotated
+    :param rot_angle: rotation angle in degree
+    :param height: height of svg file, to have proper rotation point
+    :return: (rot_x, rot_y) (tuple) rotated point
+    """
+    # rot_angle is in degree (from svg file) - transform it to radian
+    rot_angle_rad = rot_angle * math.pi / 180
+    return (round(x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad), 5),
+            round(height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad), 5))
 
 # scaling functions
 

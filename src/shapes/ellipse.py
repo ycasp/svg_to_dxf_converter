@@ -1,8 +1,6 @@
 import math
-import re
-import numpy as np
 
-from src.utilities import change_svg_to_dxf_coordinate
+from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin
 
 
 class Ellipse:
@@ -30,12 +28,12 @@ class Ellipse:
 
         # converts the center to cartesian coordinates and rotation (if given)
         center_y = change_svg_to_dxf_coordinate(float(cy), height)
-        self.center = rotate_counterclockwise_around_svg_origin(float(cx), center_y, self.rot_angle, height)
+        self.center = rotate_clockwise_around_svg_origin(float(cx), center_y, self.rot_angle, height)
 
         # determine mayor and minor axis, as well as ratio = minor axis / mayor axis
-        rotated_origin = rotate_counterclockwise_around_svg_origin(0,0, self.rot_angle, height)
-        rotated_x_axis = rotate_counterclockwise_around_svg_origin(rx, 0, self.rot_angle, height)
-        rotated_y_axis = rotate_counterclockwise_around_svg_origin(0, ry, self.rot_angle, height)
+        rotated_origin = rotate_clockwise_around_svg_origin(0,0, self.rot_angle, height)
+        rotated_x_axis = rotate_clockwise_around_svg_origin(rx, 0, self.rot_angle, height)
+        rotated_y_axis = rotate_clockwise_around_svg_origin(0, ry, self.rot_angle, height)
         rotated_x_axis = (rotated_x_axis[0] - rotated_origin[0], rotated_x_axis[1] - rotated_origin[1])
         rotated_y_axis = (rotated_y_axis[0] - rotated_origin[0], rotated_y_axis[1] - rotated_origin[1])
 
@@ -65,34 +63,3 @@ class Ellipse:
         :return: -
         """
         msp.add_ellipse(self.center, self.mayor_axis, self.ratio, self.start_param, self.end_param)
-
-
-# exports rotation angle (in degree!!) from transformation-string of svg ellipse
-def export_rotation(transformation):
-        """
-        Exports the rotation angle (in degree) given in the transformation message.
-        If none is given, the method returns 0.
-
-        :param transformation: transformation message of the svg object
-        :return: rotation angle given in the transformation message, if none is given, it returns 0
-        """
-        match = re.search(r'rotate\(([-\d.]+)', transformation)
-        if match:
-            return float(match.group(1))  # Extract the angle as a float
-        return 0  # Return 0 if no rotation is found
-
-
-def rotate_counterclockwise_around_svg_origin(x, y, rot_angle, height):
-    """
-    Rotates the point (x,y) around the converted svg origin (0, height) about the rot_angle.
-
-    :param x: x-coordinate of the point
-    :param y: y-coordinate of the point (in cartesian coordinates)
-    :param rot_angle: rotation angle in degree
-    :param height: height of the svg file
-    :return: (x,y) (tuple) of the rotated point
-    """
-    # rot_angle is in degree (from svg file) - transform it to radian
-    rot_angle_rad = rot_angle * math.pi / 180
-    return (x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad),
-            height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad))

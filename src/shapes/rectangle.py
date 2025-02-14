@@ -1,9 +1,7 @@
-from src.utilities import change_svg_to_dxf_coordinate
-from src.shapes.ellipse import Ellipse
-
-import re
-import numpy as np
 import math
+
+from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin
+from src.shapes.ellipse import Ellipse
 
 
 class Rectangle:
@@ -127,19 +125,6 @@ class Rectangle:
                      None, height, self.rot_angle, 1/2 * math.pi, math.pi)
         c4.draw_dxf_ellipse(msp)
 
-
-def export_rotation(transformation):
-    """
-    Exports the rotation angle form the transformation message.
-    :param transformation: string with transformation information of the rectangle.
-    :return: (float) rotation angle (in degree)
-    """
-    match = re.search(r'rotate\(([-\d.]+)', transformation)
-    if match:
-       return float(match.group(1))  # Extract the angle as a float
-    return 0  # Return 0 if no rotation is found
-
-
 def ensure_applicable_radius(r, length):
     """
     Ensures that the radius of the curves are applicable.
@@ -154,16 +139,3 @@ def ensure_applicable_radius(r, length):
         return length / 2
 
 
-def rotate_clockwise_around_svg_origin(x, y, rot_angle, height):
-    """
-    Rotate a point x,y counterclockwise around the moved svg-origin (0, height).
-    :param x: x-coordinate of point to be rotated
-    :param y: y-coordinate of point to be rotated
-    :param rot_angle: rotation angle in degree
-    :param height: height of svg file, to have proper rotation point
-    :return: (rot_x, rot_y) (tuple) rotated point
-    """
-    # rot_angle is in degree (from svg file) - transform it to radian
-    rot_angle_rad = rot_angle * math.pi / 180
-    return (round(x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad), 5),
-            round(height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad), 5))
