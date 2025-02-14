@@ -76,7 +76,7 @@ class TestRectangle(unittest.TestCase):
         rot_angle = 90
         self.assertEqual(rotate_clockwise_around_svg_origin(x, y, rot_angle, height), (0,-1))
 
-        # rotation around origin (height = 0), counterlockwise
+        # rotation around origin (height = 0), counterclockwise
         rot_angle = -90
         self.assertEqual(rotate_clockwise_around_svg_origin(x, y, rot_angle, height), (0,1))
 
@@ -104,8 +104,39 @@ class TestRectangle(unittest.TestCase):
 
         self.msp_mock.add_lwpolyline.assert_called_once_with([(0, 100), (0,0), (-100, 0), (-100, 100)], close = True)
 
+    def test_draw_rounded_rectangle(self):
+        # rx == 0. ry == 0 --> line, ellipse not called
+        edgy_rect = Rectangle(10, 20, 70, 50, None,
+                                   rx = 0, ry = 0, height = self.height)
+        edgy_rect.draw_dxf_rect(self.msp_mock, self.height)
+        self.msp_mock.add_line.assert_not_called()
 
+        # rx != 0, ry == 0
+        rx_rounded_rect = Rectangle(10, 20, 70, 50, None,
+                              rx=4, ry=0, height=self.height)
+        rx_rounded_rect.draw_dxf_rect(self.msp_mock, self.height)
+        self.msp_mock.add_lwpolyline_assert_not_called()
+        self.assertTrue(self.msp_mock.add_line.call_count == 4)
+        self.assertTrue(self.msp_mock.add_ellipse.call_count == 4)
+        self.msp_mock.reset_mock()
 
+        # rx == 0, ry != 0
+        ry_rounded_rect = Rectangle(10, 20, 70, 50, None,
+                                    rx=0, ry=4, height=self.height)
+        ry_rounded_rect.draw_dxf_rect(self.msp_mock, self.height)
+        self.msp_mock.add_lwpolyline_assert_not_called()
+        self.assertTrue(self.msp_mock.add_line.call_count == 4)
+        self.assertTrue(self.msp_mock.add_ellipse.call_count == 4)
+        self.msp_mock.reset_mock()
+
+        # rx != 0, ry != 0
+        rounded_rect = Rectangle(10, 20, 70, 50, None,
+                                    rx=4, ry=4, height=self.height)
+        rounded_rect.draw_dxf_rect(self.msp_mock, self.height)
+        self.msp_mock.add_lwpolyline_assert_not_called()
+        self.assertTrue(self.msp_mock.add_line.call_count == 4)
+        self.assertTrue(self.msp_mock.add_ellipse.call_count == 4)
+        self.msp_mock.reset_mock()
 
 if __name__ == "__main__":
     unittest.main()
