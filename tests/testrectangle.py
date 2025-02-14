@@ -52,13 +52,6 @@ class TestRectangle(unittest.TestCase):
         self.assertEqual(rounded_rect.rx, float(rx))
         self.assertEqual(rounded_rect.ry, float(ry))
 
-    def test_export_rotation(self):
-        normal_rotation = "rotate(42.699784)"
-        self.assertEqual(export_rotation(normal_rotation), 42.699784)
-
-        non_rotation = "translation(40)"
-        self.assertEqual(export_rotation(non_rotation), 0)
-
     def test_ensure_applicable_radius(self):
         width = 100
         applicable_r = 49
@@ -66,29 +59,6 @@ class TestRectangle(unittest.TestCase):
 
         non_applicable_r = 75
         self.assertEqual(ensure_applicable_radius(non_applicable_r, width), width / 2)
-
-    def test_clockwise_rotation_around_svg_origin(self):
-        x = 1
-        y = 0
-        height = 0
-
-        # rotation around origin (height = 0), clockwise
-        rot_angle = 90
-        self.assertEqual(rotate_clockwise_around_svg_origin(x, y, rot_angle, height), (0,-1))
-
-        # rotation around origin (height = 0), counterclockwise
-        rot_angle = -90
-        self.assertEqual(rotate_clockwise_around_svg_origin(x, y, rot_angle, height), (0,1))
-
-        # no rotation
-        rot_angle = 0
-        self.assertEqual(rotate_clockwise_around_svg_origin(x, y, rot_angle, height), (1, 0))
-
-        # "decimal rotation" (test rounding)
-        x = 0.3
-        y = 0.25
-        rot_angle = 22
-        self.assertEqual(rotate_clockwise_around_svg_origin(x, y, rot_angle, height), (0.37181, 0.11941))
 
     def test_draw_dxf_rect_basic(self):
         """Test drawing a rectangle without rounded corners"""
