@@ -32,8 +32,8 @@ class Ellipse:
 
         # determine mayor and minor axis, as well as ratio = minor axis / mayor axis
         rotated_origin = rotate_clockwise_around_svg_origin(0,0, self.rot_angle, height)
-        rotated_x_axis = rotate_clockwise_around_svg_origin(rx, 0, self.rot_angle, height)
-        rotated_y_axis = rotate_clockwise_around_svg_origin(0, ry, self.rot_angle, height)
+        rotated_x_axis = rotate_clockwise_around_svg_origin(float(rx), 0, self.rot_angle, height)
+        rotated_y_axis = rotate_clockwise_around_svg_origin(0, float(ry), self.rot_angle, height)
         rotated_x_axis = (rotated_x_axis[0] - rotated_origin[0], rotated_x_axis[1] - rotated_origin[1])
         rotated_y_axis = (rotated_y_axis[0] - rotated_origin[0], rotated_y_axis[1] - rotated_origin[1])
 
