@@ -13,10 +13,12 @@ class Path:
     Attributes
        path (string): The path of a svg file.
     """
-    # maximal distance to the original Bézier curve
-    MAX_DISTANCE = 0.1
-    # minimal segments a Bézier curve is split into
-    MIN_SEGMENTS = 3
+    # constants for polyline approximation of Bézier curves
+    MAX_DISTANCE = 0.1 # maximal distance to the original Bézier curve
+    MIN_SEGMENTS = 3 # minimal segments a Bézier curve is split into
+
+    # constant for spline approx of Bézier curves
+    G1_TOL = 1e-2
 
     def __init__(self, path):
         """
@@ -53,7 +55,7 @@ class Path:
                 msp.add_arc(center=(segment.center.real, change_svg_to_dxf_coordinate(segment.center.imag, height)),
                             radius=segment.radius.real)
             else:
-                print(f"Unsupported segment type: {type(segment)}")
+                print(f"Unsupported segment type:", segment)
 
     @staticmethod
     def approximate_cubic_bezier_curve(segment, msp, height):

@@ -54,7 +54,7 @@ class Rectangle:
         else:
             self.ry = float(ry)
 
-        self.rot_angle = rot_angle
+        self.rot_angle = float(rot_angle)
         if self.transformation is not None:
             # check for rotation
             self.rot_angle = export_rotation(self.transformation)
@@ -72,10 +72,10 @@ class Rectangle:
         if self.rx == 0 and self.ry == 0:
             # Calculate rectangle vertices (DXF uses bottom-left origin)
             vertices = [
-                rotate_counterclockwise_around_svg_origin(self.x, self.y, self.rot_angle, height),  # top left
-                rotate_counterclockwise_around_svg_origin(self.x + self.width, self.y, self.rot_angle, height),  # top right
-                rotate_counterclockwise_around_svg_origin(self.x + self.width, self.y + self.rect_height, self.rot_angle, height),  # bottom right (height is < 0)
-                rotate_counterclockwise_around_svg_origin(self.x, self.y + self.rect_height, self.rot_angle, height),  # bottem left (height is < 0)
+                rotate_clockwise_around_svg_origin(self.x, self.y, self.rot_angle, height),  # top left
+                rotate_clockwise_around_svg_origin(self.x + self.width, self.y, self.rot_angle, height),  # top right
+                rotate_clockwise_around_svg_origin(self.x + self.width, self.y + self.rect_height, self.rot_angle, height),  # bottom right (height is < 0)
+                rotate_clockwise_around_svg_origin(self.x, self.y + self.rect_height, self.rot_angle, height),  # bottem left (height is < 0)
             ]
             # Add rectangle as a closed polyline
             msp.add_lwpolyline(vertices, close=True)
@@ -96,14 +96,14 @@ class Rectangle:
         ry = ensure_applicable_radius(self.ry, self.rect_height * (-1))
 
         # define corner points
-        p1 = rotate_counterclockwise_around_svg_origin(self.x + rx, self.y, self.rot_angle, height) # top left vertice, after arc
-        p2 = rotate_counterclockwise_around_svg_origin(self.x + self.width - rx, self.y, self.rot_angle, height) # top right vertice, before arc, rotation included
-        p3 = rotate_counterclockwise_around_svg_origin(self.x + self.width, self.y - ry, self.rot_angle, height) # top right vertice, after arc, rotation included
-        p4 = rotate_counterclockwise_around_svg_origin(self.x + self.width, self.y + self.rect_height + ry, self.rot_angle, height) # bottom right vertice, before arc, rotation included
-        p5 = rotate_counterclockwise_around_svg_origin(self.x + self.width - rx, self.y + self.rect_height, self.rot_angle, height) # bottom right vertice, after arc, rotation included
-        p6 = rotate_counterclockwise_around_svg_origin(self.x + rx, self.y + self.rect_height, self.rot_angle, height) # bottom left vertice, before arc, rotation included
-        p7 = rotate_counterclockwise_around_svg_origin(self.x, self.y + self.rect_height + ry, self.rot_angle, height) # bottom left vertice, after arc, rotation included
-        p8 = rotate_counterclockwise_around_svg_origin(self.x, self.y - ry, self.rot_angle, height) # top left vertice, before arc, rotation included
+        p1 = rotate_clockwise_around_svg_origin(self.x + rx, self.y, self.rot_angle, height) # top left vertice, after arc
+        p2 = rotate_clockwise_around_svg_origin(self.x + self.width - rx, self.y, self.rot_angle, height) # top right vertice, before arc, rotation included
+        p3 = rotate_clockwise_around_svg_origin(self.x + self.width, self.y - ry, self.rot_angle, height) # top right vertice, after arc, rotation included
+        p4 = rotate_clockwise_around_svg_origin(self.x + self.width, self.y + self.rect_height + ry, self.rot_angle, height) # bottom right vertice, before arc, rotation included
+        p5 = rotate_clockwise_around_svg_origin(self.x + self.width - rx, self.y + self.rect_height, self.rot_angle, height) # bottom right vertice, after arc, rotation included
+        p6 = rotate_clockwise_around_svg_origin(self.x + rx, self.y + self.rect_height, self.rot_angle, height) # bottom left vertice, before arc, rotation included
+        p7 = rotate_clockwise_around_svg_origin(self.x, self.y + self.rect_height + ry, self.rot_angle, height) # bottom left vertice, after arc, rotation included
+        p8 = rotate_clockwise_around_svg_origin(self.x, self.y - ry, self.rot_angle, height) # top left vertice, before arc, rotation included
 
         # add edges
         msp.add_line(p1, p2) # top edge
@@ -150,13 +150,13 @@ def ensure_applicable_radius(r, length):
     :param length: length of the corresponding direction of the rectangle
     :return: r if radius is good, or length / 2 if radius was chosen to big
     """
-    if r <= length:
+    if r <= length / 2:
         return r
     else:
         return length / 2
 
 
-def rotate_counterclockwise_around_svg_origin(x, y, rot_angle, height):
+def rotate_clockwise_around_svg_origin(x, y, rot_angle, height):
     """
     Rotate a point x,y counterclockwise around the moved svg-origin (0, height).
     :param x: x-coordinate of point to be rotated
@@ -167,5 +167,5 @@ def rotate_counterclockwise_around_svg_origin(x, y, rot_angle, height):
     """
     # rot_angle is in degree (from svg file) - transform it to radian
     rot_angle_rad = rot_angle * math.pi / 180
-    return (x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad),
-            height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad))
+    return (round(x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad), 5),
+            round(height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad), 5))
