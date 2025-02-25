@@ -23,10 +23,11 @@ def read_svg_file(name):
     # print("Root tag:", root.tag)
 
     # Iterate through elements in the SVG
-    #for element in root.iter():
+    # for element in root.iter():
     #    print(element.tag, element.attrib)
 
     return root
+
 
 def get_svg_height(root):
     """
@@ -41,8 +42,8 @@ def get_svg_height(root):
     height = root.attrib.get('height')
     if height:
         if 'px' in height:
-            height = height.replace('px','')
-            return float(height) * 25.4 / 96 # 96 dpi standard for svg
+            height = height.replace('px', '')
+            return float(height) * 25.4 / 96  # 96 dpi standard for svg
         height = height.replace('mm', '')
         # TODO check if there are other measures missing
         return float(height)
@@ -54,8 +55,9 @@ def get_svg_height(root):
         return box_height
 
     # if none is specified
-    print('no height parameter specified :(') # TODO handle error properly
+    print('no height parameter specified :(')  # TODO handle error properly
     return 0
+
 
 def get_svg_width(root):
     """
@@ -70,8 +72,8 @@ def get_svg_width(root):
     width = root.attrib.get('width')
     if width:
         if 'px' in width:
-            width = width.replace('px','')
-            return float(width) * 25.4 / 96 # 96 dpi standard for svg
+            width = width.replace('px', '')
+            return float(width) * 25.4 / 96  # 96 dpi standard for svg
         width = width.replace('mm', '')
         # TODO check if there are other measures missing
         return float(width)
@@ -83,8 +85,9 @@ def get_svg_width(root):
         return box_width
 
     # if none is specified
-    print('no height parameter specified :(') # TODO handle error properly
+    print('no height parameter specified :(')  # TODO handle error properly
     return 0
+
 
 def print_root(root):
     """
@@ -106,6 +109,9 @@ def scale_file(root, new_width, new_height):
     :param new_height: new height in mm
     :return: scaled svg content in a root
     """
+
+    # TODO: exception handling, if ratio is not correct
+
     # calculate scaling in x/y-direction
     scale_x = new_width / get_svg_width(root)
     scale_y = new_height / get_svg_height(root)
@@ -120,6 +126,7 @@ def scale_file(root, new_width, new_height):
         match element.tag:
             case '{http://www.w3.org/2000/svg}circle':
                 scale_circle(element, scale_x, scale_y)
+                # cut rules
             case '{http://www.w3.org/2000/svg}ellipse':
                 scale_ellipse(element, scale_x, scale_y)
             case '{http://www.w3.org/2000/svg}rect':
@@ -131,6 +138,10 @@ def scale_file(root, new_width, new_height):
             case '{http://www.w3.org/2000/svg}path':
                 scale_path(element, scale_x, scale_y)
             case _:
-                pass #TODO proper error handling
+                pass  # TODO proper error handling
 
     return root
+
+
+def enforce_cut_rules(root):
+    print(root.tag)

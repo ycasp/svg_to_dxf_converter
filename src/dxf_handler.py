@@ -1,4 +1,5 @@
 import ezdxf
+
 from src.shapes.circle import Circle
 from src.shapes.ellipse import Ellipse
 from src.shapes.line import Line
@@ -56,7 +57,6 @@ def write_dxf(root, filename):
                 path.draw_svg_path(msp, height)
             case _:
                 # print('nothing:', element.tag, element.attrib)
-                pass # TODO porper error handling
+                pass  # TODO porper error handling
 
     doc.saveas("dxf_files/" + filename + ".dxf")
-
