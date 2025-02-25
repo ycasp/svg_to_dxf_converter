@@ -142,6 +142,48 @@ def scale_file(root, new_width, new_height):
 
     return root
 
+def scale_file_param(root, scale_x, scale_y):
+    """
+    Scales all figures in a svg file. Changes the attributes in the tree.
+
+    :param root: tree with svg figures
+    :param scale_x: integer scaling factor in x direction
+    :param scale_y: integer scaling factor in y direction
+    :return: scaled svg content in a root
+    """
+
+    # TODO: exception handling, if ratio is not correct
+
+    # calculate scaling in x/y-direction
+    new_width = scale_x * get_svg_width(root)
+    new_height = scale_y * get_svg_height(root)
+
+    # set new width and height
+    root.set('width', str(new_width) + 'mm')
+    root.set('height', str(new_height) + 'mm')
+    root.set('viewBox', '0 0 ' + str(new_width) + ' ' + str(new_height))
+
+    # iterate through svg content
+    for element in root.iter():
+        match element.tag:
+            case '{http://www.w3.org/2000/svg}circle':
+                scale_circle(element, scale_x, scale_y)
+                # cut rules
+            case '{http://www.w3.org/2000/svg}ellipse':
+                scale_ellipse(element, scale_x, scale_y)
+            case '{http://www.w3.org/2000/svg}rect':
+                scale_rectangle(element, scale_x, scale_y)
+            case '{http://www.w3.org/2000/svg}line':
+                scale_line(element, scale_x, scale_y)
+            case '{http://www.w3.org/2000/svg}polygon':
+                scale_polygon(element, scale_x, scale_y)
+            case '{http://www.w3.org/2000/svg}path':
+                scale_path(element, scale_x, scale_y)
+            case _:
+                pass  # TODO proper error handling
+
+    return root
+
 
 def enforce_cut_rules(root):
     print(root.tag)
