@@ -30,4 +30,4 @@ class Line:
         :param msp: Modelspace od dxf file
         :return: -
         """
-        msp.add_line(self.start,  self.end)
+        msp.add_line(self.start, self.end)

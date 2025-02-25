@@ -10,7 +10,7 @@ class Circle:
         radius (float): radius of the circle.
     """
 
-    def __init__(self, cx, cy , radius, height):
+    def __init__(self, cx, cy, radius, height):
         """
         Initializes the circle object.
 

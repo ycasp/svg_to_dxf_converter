@@ -1,5 +1,6 @@
 from src.utilities import change_svg_to_dxf_coordinate
 
+
 class Polygon:
     """
     Represents a Polygon with several points in a point list.
@@ -17,8 +18,7 @@ class Polygon:
         :param height: height of the svg file to change coordinates
         """
         self.points_list = [(float(p.split(',')[0]), change_svg_to_dxf_coordinate(float(p.split(',')[1]), height))
-                            for p in points.strip().split()]
-
+            for p in points.strip().split()]
 
     def draw_dxf_polygon(self, msp):
         """

@@ -16,7 +16,8 @@ class Ellipse:
         start_param: start of the ellipsis (if only part of the ellipse, in radian from 0 to 2pi), default 0
         end_param: end of the ellipsis (if only part of the ellipse, in radian form 0 to 2pi), default 2pi
     """
-    def __init__(self, cx, cy, rx, ry, transformation, height, rot_angle = 0, start_param = 0, end_param = 2 * math.pi):
+
+    def __init__(self, cx, cy, rx, ry, transformation, height, rot_angle=0, start_param=0, end_param=2 * math.pi):
         # transformation message: until now, only rotation
         self.transformation = transformation
 
@@ -31,7 +32,7 @@ class Ellipse:
         self.center = rotate_clockwise_around_svg_origin(float(cx), center_y, self.rot_angle, height)
 
         # determine mayor and minor axis, as well as ratio = minor axis / mayor axis
-        rotated_origin = rotate_clockwise_around_svg_origin(0,0, self.rot_angle, height)
+        rotated_origin = rotate_clockwise_around_svg_origin(0, 0, self.rot_angle, height)
         rotated_x_axis = rotate_clockwise_around_svg_origin(float(rx), 0, self.rot_angle, height)
         rotated_y_axis = rotate_clockwise_around_svg_origin(0, float(ry), self.rot_angle, height)
         rotated_x_axis = (rotated_x_axis[0] - rotated_origin[0], rotated_x_axis[1] - rotated_origin[1])
@@ -46,12 +47,12 @@ class Ellipse:
         else:
             self.mayor_axis = rotated_y_axis
             self.ratio = norm_x / norm_y
-            # if y-axis is mayor, start and end parameter are rotated about 1/2 * pi
+            # if y-axis is mayor, start and end parameter are rotated + 1/2 * pi
             # thus rotate back
-            start_param = start_param - 1/2 * math.pi
-            end_param = end_param - 1/2 * math.pi
+            start_param = start_param - 1 / 2 * math.pi
+            end_param = end_param - 1 / 2 * math.pi
 
-        #self.ratio = (minor_axis[0] ** 2 + minor_axis[1] ** 2) ** 0.5 / (self.mayor_axis[0] ** 2 + self.mayor_axis[1] ** 2) ** 0.5
+        # self.ratio = (minor_axis[0] ** 2 + minor_axis[1] ** 2) ** 0.5 / (self.mayor_axis[0] ** 2 + self.mayor_axis[1] ** 2) ** 0.5
         self.start_param = start_param
         self.end_param = end_param
 
