@@ -1,8 +1,8 @@
 import unittest
-from testrectangle import TestRectangle
-from testcircle import TestCircle
-from testline import TestLine
-from testpolygon import TestPolygon
+from test_rectangle import TestRectangle
+from test_circle import TestCircle
+from test_line import TestLine
+from test_polygon import TestPolygon
 
 # Create a test suite
 def suite():

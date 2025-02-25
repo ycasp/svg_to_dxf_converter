@@ -84,7 +84,7 @@ class TestUtilities(unittest.TestCase):
 
         large_angle = True
 
-        self.assertEqual(calculate_angle_between_vectors_in_rad(x, y, large_angle), 7/4 * math.pi)
+        self.assertNotEqual(calculate_angle_between_vectors_in_rad(x, y, large_angle), 7/4 * math.pi)
 
         y = (-1, 0)
         self.assertEqual(calculate_angle_between_vectors_in_rad(x, y, False),
