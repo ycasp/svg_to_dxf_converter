@@ -112,7 +112,7 @@ class TestPath(unittest.TestCase):
         draw_rotated_elliptic_arc(center = center, rx = rx, ry = ry, theta = 170.8528607762027, delta = -87.965926260717367,
                                   rotation = 0, sweep = False, msp = self.msp_mock)
 
-        self.msp_mock.add_ellipse.assert_called_once_with(center = center, mayor_axis = (0, 120), ratio = 0.75,
+        self.msp_mock.add_ellipse.assert_called_once_with(center = center, major_axis = (0, 120), ratio = 0.75,
                                                           start_param = -4.552741283791109, end_param = -3.0174462409750467)
         self.msp_mock.reset_mock()
 
@@ -122,7 +122,7 @@ class TestPath(unittest.TestCase):
         draw_rotated_elliptic_arc(center=center, rx=rx, ry=ry, theta=141.7830767038384, delta=-103.5661534076767,
                                   rotation=45, sweep=False, msp=self.msp_mock)
 
-        self.msp_mock.add_ellipse.assert_called_once_with(center=center, mayor_axis=(84.85281, 84.85281), ratio=0.75,
+        self.msp_mock.add_ellipse.assert_called_once_with(center=center, major_axis=(84.85281, 84.85281), ratio=0.75,
                                                           start_param=-4.045377838884546, end_param=-2.237807468295042)
         self.msp_mock.reset_mock()
 
@@ -132,7 +132,7 @@ class TestPath(unittest.TestCase):
         draw_rotated_elliptic_arc(center=center, rx=rx, ry=ry, theta=170.8528607762027, delta=-87.965926260717367,
                                   rotation=0, sweep=True, msp=self.msp_mock)
 
-        self.msp_mock.add_ellipse.assert_called_once_with(center=center, mayor_axis=(0, 120), ratio=0.75,
+        self.msp_mock.add_ellipse.assert_called_once_with(center=center, major_axis=(0, 120), ratio=0.75,
                                                           start_param=-3.0174462409750467, end_param=-4.552741283791109)
         self.msp_mock.reset_mock()
 
@@ -142,7 +142,7 @@ class TestPath(unittest.TestCase):
         draw_rotated_elliptic_arc(center=center, rx=rx, ry=ry, theta=34.775926232869779, delta=-72.218308575467063,
             rotation=136, sweep=True, msp=self.msp_mock)
 
-        self.msp_mock.add_ellipse.assert_called_once_with(center=center, mayor_axis=(83.35900, -86.32078), ratio=0.75,
+        self.msp_mock.add_ellipse.assert_called_once_with(center=center, major_axis=(83.35900, -86.32078), ratio=0.75,
                                                           start_param=-0.9173034751259864, end_param=-2.1777507399891425)
         self.msp_mock.reset_mock()
 
@@ -154,7 +154,7 @@ class TestPath(unittest.TestCase):
         draw_rotated_elliptic_arc(center=center, rx=rx, ry=ry, theta=-49.231602624334684, delta=-82.137486587315081,
                                   rotation=154, sweep=True, msp=self.msp_mock)
 
-        self.msp_mock.add_ellipse.assert_called_once_with(center=center, mayor_axis=(-130.32514, -63.56382), ratio=0.5379310344827586,
+        self.msp_mock.add_ellipse.assert_called_once_with(center=center, major_axis=(-130.32514, -63.56382), ratio=0.5379310344827586,
                                                           start_param=2.2928231420894503,
                                                           end_param=0.8592535618281213)
         self.msp_mock.reset_mock()
