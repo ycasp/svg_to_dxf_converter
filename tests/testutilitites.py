@@ -1,5 +1,7 @@
 import unittest
-from src.utilities import rotate_clockwise_around_svg_origin, export_rotation, change_svg_to_dxf_coordinate
+from src.utilities import rotate_clockwise_around_svg_origin, export_rotation, change_svg_to_dxf_coordinate, \
+    calculate_euclidean_norm, calculate_scalar_product, calculate_angle_between_vectors_in_rad
+import math
 from unittest.mock import Mock
 
 class TestUtilities(unittest.TestCase):
@@ -33,3 +35,57 @@ class TestUtilities(unittest.TestCase):
 
             non_rotation = "translation(40)"
             self.assertEqual(export_rotation(non_rotation), 0)
+
+    def test_euclidean_norm(self):
+        x = (3, 4)
+        self.assertEqual(calculate_euclidean_norm(x), 5)
+
+        x = (-3, 4)
+        self.assertEqual(calculate_euclidean_norm(x), 5)
+
+        x = (3, -4)
+        self.assertEqual(calculate_euclidean_norm(x), 5)
+
+        x = (-3, -4)
+        self.assertEqual(calculate_euclidean_norm(x), 5)
+
+        x = (0, 0)
+        self.assertEqual(calculate_euclidean_norm(x), 0)
+
+    def test_scalar_product(self):
+        x = (1, 0); y = (0, 1)
+        self.assertEqual(calculate_scalar_product(x, y), 0)
+
+        x = (2, 8); y = (-3, 4)
+        self.assertEqual(calculate_scalar_product(x, y), 26)
+
+        x = (-2, 8); y = (-3, 4)
+        self.assertEqual(calculate_scalar_product(x, y), 38)
+
+        x = (-2, -8); y = (-3, 4)
+        self.assertEqual(calculate_scalar_product(x, y), -26)
+
+        x = (-2, -8); y = (-3, -4)
+        self.assertEqual(calculate_scalar_product(x, y), 38)
+
+        x = (2, -8); y = (-3, 4)
+        self.assertEqual(calculate_scalar_product(x, y), -38)
+
+        x = (0, 0); y = (0, 0)
+        self.assertEqual(calculate_scalar_product(x, y), 0)
+
+    def test_angle_calculation(self):
+        x = (1, 0)
+
+        y = (math.sqrt(2) / 2, math.sqrt(2) / 2)
+        large_angle = False
+
+        self.assertEqual(calculate_angle_between_vectors_in_rad(x, y, large_angle), 1/4 * math.pi)
+
+        large_angle = True
+
+        self.assertEqual(calculate_angle_between_vectors_in_rad(x, y, large_angle), 7/4 * math.pi)
+
+        y = (-1, 0)
+        self.assertEqual(calculate_angle_between_vectors_in_rad(x, y, False),
+                         calculate_angle_between_vectors_in_rad(x, y, True))
