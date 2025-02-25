@@ -165,4 +165,4 @@ def draw_rotated_elliptic_arc(center, rx, ry, theta, delta, rotation, sweep, msp
         start_angle = start_angle - math.pi / 2
         end_angle = end_angle - math.pi / 2
 
-    msp.add_ellipse(center=center, mayor_axis=mayor_axis, ratio=ratio, start_param=start_angle, end_param=end_angle)
+    msp.add_ellipse(center=center, major_axis=mayor_axis, ratio=ratio, start_param=start_angle, end_param=end_angle)
