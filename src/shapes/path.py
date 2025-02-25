@@ -6,7 +6,7 @@ from svgpathtools.path import CubicBezier, QuadraticBezier, Arc
 from svgpathtools.path import Line as svgLine
 
 from src.utilities import change_svg_to_dxf_coordinate, rad_to_degree, \
-    rotate_clockwise_around_cartesian_origin, calculate_euclidean_norm
+    rotate_clockwise_around_cartesian_origin
 
 
 class Path:
@@ -155,9 +155,6 @@ def draw_rotated_elliptic_arc(center, rx, ry, theta, delta, rotation, sweep, msp
 
     rotated_rx = rotate_clockwise_around_cartesian_origin(rx, 0, rotation)
     rotated_ry = rotate_clockwise_around_cartesian_origin(0, ry, rotation)
-
-    norm_rotated_x = calculate_euclidean_norm(rotated_rx)
-    norm_rotated_y = calculate_euclidean_norm(rotated_ry)
 
     if rx >= ry:
         mayor_axis = rotated_rx

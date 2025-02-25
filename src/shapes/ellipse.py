@@ -38,15 +38,12 @@ class Ellipse:
         rotated_x_axis = (rotated_x_axis[0] - rotated_origin[0], rotated_x_axis[1] - rotated_origin[1])
         rotated_y_axis = (rotated_y_axis[0] - rotated_origin[0], rotated_y_axis[1] - rotated_origin[1])
 
-        # calc the norms
-        norm_x = (rotated_x_axis[0] ** 2 + rotated_x_axis[1] ** 2) ** 0.5
-        norm_y = (rotated_y_axis[0] ** 2 + rotated_y_axis[1] ** 2) ** 0.5
-        if norm_x >= norm_y:
+        if float(rx) >= float(ry):
             self.mayor_axis = rotated_x_axis
-            self.ratio = norm_y / norm_x
+            self.ratio = float(ry) / float(rx)
         else:
             self.mayor_axis = rotated_y_axis
-            self.ratio = norm_x / norm_y
+            self.ratio = float(rx) / float(ry)
             # if y-axis is mayor, start and end parameter are rotated + 1/2 * pi
             # thus rotate back
             start_param = start_param - 1 / 2 * math.pi
