@@ -5,6 +5,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/.venv1" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/htmlcov" />
+      <excludeFolder url="file://$MODULE_DIR$/src/dxf_files" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.13 (svg to dxf converter Yannik)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
