@@ -1,9 +1,11 @@
 import xml.etree.ElementTree as ElementTree
 from xml.etree.ElementTree import ParseError
+
 from src.logging_config import setup_logger
 from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
 
 svg_logger = setup_logger(__name__)
+
 
 def read_svg_file(name):
     """
@@ -20,21 +22,13 @@ def read_svg_file(name):
     # Parse the SVG file
     try:
         tree = ElementTree.parse(file_path)
+        root = tree.getroot()
+        return root
+
     except ParseError as parseErr:
         svg_logger.exception(parseErr)
     except FileNotFoundError as pathErr:
         raise FileNotFoundError(pathErr)
-
-    root = tree.getroot()
-
-    # Print the root tag (should be <svg>)
-    # print("Root tag:", root.tag)
-
-    # Iterate through elements in the SVG
-    # for element in root.iter():
-    #    print(element.tag, element.attrib)
-
-    return root
 
 
 def get_svg_height(root):
@@ -161,6 +155,7 @@ def scale_file(root, new_width, new_height):
 
     return root
 
+
 def scale_file_param(root, scale_x, scale_y):
     """
     Scales all figures in a svg file. Changes the attributes in the tree.
@@ -171,7 +166,7 @@ def scale_file_param(root, scale_x, scale_y):
     :return: scaled svg content in a root
     """
 
-    # TODO: exception handling, if ratio is not correct
+    # here no error handling, as we have no (possible) division by zero
 
     # calculate scaling in x/y-direction
     new_width = scale_x * get_svg_width(root)

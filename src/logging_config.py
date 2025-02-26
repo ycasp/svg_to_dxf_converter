@@ -2,7 +2,8 @@ import logging
 
 LOG_FORMAT = "%(asctime)s:%(name)s:%(levelname)s:%(pathname)s:%(lineno)d:%(message)s"
 
-def setup_logger(name,log_file = "swissmade365.log", log_level = logging.DEBUG):
+
+def setup_logger(name, log_file="swissmade365.log", log_level=logging.DEBUG):
     logger = logging.getLogger(name)
     logger.setLevel(log_level)
 

@@ -1,8 +1,9 @@
-from src.dxf_handler import write_dxf
-from src.svg_handler import read_svg_file, scale_file_param, scale_file
 from logging_config import setup_logger
+from src.dxf_handler import write_dxf
+from src.svg_handler import read_svg_file, scale_file
 
 main_logger = setup_logger(__name__)
+
 
 def main():
     """Main function to print Hello World."""
@@ -31,4 +32,3 @@ if __name__ == "__main__":
 
     except FileNotFoundError as pathErr:
         main_logger.exception(pathErr)
-
