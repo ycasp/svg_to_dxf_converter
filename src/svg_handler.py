@@ -1,7 +1,9 @@
 import xml.etree.ElementTree as ElementTree
-
+from xml.etree.ElementTree import ParseError
+from src.logging_config import setup_logger
 from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
 
+svg_logger = setup_logger(__name__)
 
 def read_svg_file(name):
     """
@@ -16,7 +18,13 @@ def read_svg_file(name):
     file_path = name
 
     # Parse the SVG file
-    tree = ElementTree.parse(file_path)
+    try:
+        tree = ElementTree.parse(file_path)
+    except ParseError as parseErr:
+        svg_logger.exception(parseErr)
+    except FileNotFoundError as pathErr:
+        raise FileNotFoundError(pathErr)
+
     root = tree.getroot()
 
     # Print the root tag (should be <svg>)
@@ -55,7 +63,7 @@ def get_svg_height(root):
         return box_height
 
     # if none is specified
-    print('no height parameter specified :(')  # TODO handle error properly
+    svg_logger.warning("no height found in svg file")
     return 0
 
 
@@ -85,7 +93,7 @@ def get_svg_width(root):
         return box_width
 
     # if none is specified
-    print('no height parameter specified :(')  # TODO handle error properly
+    svg_logger.warning("no width found in svg file")
     return 0
 
 
@@ -110,11 +118,22 @@ def scale_file(root, new_width, new_height):
     :return: scaled svg content in a root
     """
 
-    # TODO: exception handling, if ratio is not correct
+    old_width = get_svg_width(root)
+    old_height = get_svg_height(root)
+
+    try:
+        old_ratio = old_height / old_width
+        new_ratio = new_height / new_width
+    except ZeroDivisionError as e:
+        svg_logger.exception(e)
+        return root
+    else:
+        if old_ratio != new_ratio:
+            svg_logger.warning("format of file is changed badly - new ratio != old ratio")
 
     # calculate scaling in x/y-direction
-    scale_x = new_width / get_svg_width(root)
-    scale_y = new_height / get_svg_height(root)
+    scale_x = new_width / old_width
+    scale_y = new_height / old_height
 
     # set new width and height
     root.set('width', str(new_width) + 'mm')

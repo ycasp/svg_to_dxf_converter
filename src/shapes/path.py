@@ -4,10 +4,11 @@ from ezdxf.path import from_vertices, render_splines_and_polylines
 from svgpathtools import parse_path
 from svgpathtools.path import CubicBezier, QuadraticBezier, Arc
 from svgpathtools.path import Line as svgLine
-
+from src.logging_config import setup_logger
 from src.utilities import change_svg_to_dxf_coordinate, rad_to_degree, \
     rotate_clockwise_around_cartesian_origin
 
+path_logger = setup_logger(__name__)
 
 class Path:
     """
@@ -71,7 +72,7 @@ class Path:
                                               segment.rotation, segment.sweep, msp)
 
             else:
-                print(f"Unsupported segment type:", segment)
+                path_logger.warning("unsupported path segment: {}".format(segment))
 
 
 def approximate_cubic_bezier_curve(segment, msp, height):
