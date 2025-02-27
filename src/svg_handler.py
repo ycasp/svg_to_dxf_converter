@@ -123,7 +123,7 @@ def scale_file(root, new_width, new_height):
         return root
     else:
         if old_ratio != new_ratio:
-            svg_logger.warning("format of file is changed badly - new ratio != old ratio")
+            svg_logger.warning(f"format of file is changed badly - new ratio: {new_ratio} != old ratio: {old_ratio}")
 
     # calculate scaling in x/y-direction
     scale_x = new_width / old_width
@@ -194,7 +194,7 @@ def scale_file_param(root, scale_x, scale_y):
             case '{http://www.w3.org/2000/svg}path':
                 scale_path(element, scale_x, scale_y)
             case _:
-                pass  # TODO proper error handling
+                svg_logger.info(f"svg_element without matching figure tag: {element.tag}: {element.attrib}")
 
     return root
 
