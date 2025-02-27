@@ -2,8 +2,6 @@ import math
 import re
 
 import numpy as np
-from svgpathtools import parse_path
-
 
 # svg transformation functions
 
