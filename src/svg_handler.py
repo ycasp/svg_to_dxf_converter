@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ElementTree
 from xml.etree.ElementTree import ParseError
 
 from src.logging_config import setup_logger
-from src.utilities import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
+from src.scaling_functions import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
 
 svg_logger = setup_logger(__name__)
 
