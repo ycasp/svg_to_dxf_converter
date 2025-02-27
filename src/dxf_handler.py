@@ -8,6 +8,9 @@ from src.shapes.polygon import Polygon
 from src.shapes.rectangle import Rectangle
 from src.svg_handler import get_svg_height
 
+from logging_config import setup_logger
+
+dxf_logger = setup_logger(__name__)
 
 def write_dxf(root, filename):
     """
@@ -57,6 +60,7 @@ def write_dxf(root, filename):
                 path.draw_svg_path(msp, height)
             case _:
                 # print('nothing:', element.tag, element.attrib)
-                pass  # TODO porper error handling
+                dxf_logger.info(f"svg_element without matching figure tag: {element.tag}: {element.attrib}")
 
     doc.saveas("dxf_files/" + filename + ".dxf")
+    dxf_logger.info(f"file saved under: src/dxf_files/ + {filename} . dxf")
