@@ -1,7 +1,5 @@
 import unittest
 
-from typing_extensions import override
-
 from src.shapes.rectangle import (Rectangle, export_rotation, ensure_applicable_radius,
                                   rotate_clockwise_around_svg_origin)
 from src.utilities import change_svg_to_dxf_coordinate

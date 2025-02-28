@@ -12,7 +12,7 @@ class TestEllipse(unittest.TestCase):
 
     def test_initialization(self):
         cx = "10"; cy = "10"; rx = "10"; ry = "5"
-        transformation = "None"
+        transformation = None
 
         # with x as mayor axis
         basic_ellipse_mayor_x = Ellipse(cx, cy, rx, ry, transformation, self.height, 0, 1/2 * pi, 3/2 * pi)
@@ -57,7 +57,7 @@ class TestEllipse(unittest.TestCase):
 
     def test_draw_dxf_ellipse(self):
         cx = "10"; cy = "10"; rx = "10"; ry = "5"
-        transformation = "None"
+        transformation = None
 
         # with x as mayor axis
         basic_ellipse_mayor_x = Ellipse(cx, cy, rx, ry, transformation, self.height)

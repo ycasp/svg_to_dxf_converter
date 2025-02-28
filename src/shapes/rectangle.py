@@ -56,7 +56,7 @@ class Rectangle:
         self.rot_angle = float(rot_angle)
         if self.transformation is not None:
             # check for rotation
-            self.rot_angle = export_rotation(self.transformation)
+            self.rot_angle, _, _ = export_rotation(self.transformation)
 
     # draws a rectangle form the given svg data (from a rect attribute) into a dxf modelspace
     def draw_dxf_rect(self, msp, height):

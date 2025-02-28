@@ -25,7 +25,7 @@ class Ellipse:
         self.rot_angle = rot_angle
         if self.transformation is not None:
             # check for rotation
-            self.rot_angle = export_rotation(self.transformation)
+            self.rot_angle, _, _ = export_rotation(self.transformation)
 
         # converts the center to cartesian coordinates and rotation (if given)
         center_y = change_svg_to_dxf_coordinate(float(cy), height)
