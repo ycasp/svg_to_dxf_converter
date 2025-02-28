@@ -16,7 +16,8 @@ def change_svg_to_dxf_coordinate(y, height):
     return (-1) * y + height
 
 
-# exports rotation angle (in degree!!) from transformation-string of svg ellipse
+# get values of transformation messages
+
 def export_rotation(transformation):
     """
     Exports the rotation angle (in degree) given in the transformation message.
@@ -25,11 +26,48 @@ def export_rotation(transformation):
     :param transformation: transformation message of the svg object
     :return: rotation angle given in the transformation message, if none is given, it returns 0
     """
-    match = re.search(r'rotate\(([-\d.]+)', transformation)
+    match = re.search(r'rotate\(([-\d.e]+)(?:,\s*([-\d.e]+),\s*([-\d.e]+))?\)', transformation)
     if match:
-        return float(match.group(1))  # Extract the angle as a float
-    return 0  # Return 0 if no rotation is found
+        angle = float(match.group(1))  # Extract the angle
+        cx = float(match.group(2)) if match.group(2) else 0  # Default cx = 0 if not present
+        cy = float(match.group(3)) if match.group(3) else 0  # Default cy = 0 if not present
+        return angle, cx, cy
+    return None  # Default values if no rotation is found
 
+def export_translation(transformation):
+    match = re.search(r'translate\(([-\d.e]+),\s*([-\d.e]+)\)', transformation)
+    if match:
+        dx = float(match.group(1))
+        dy = float(match.group(2)) # if no translation in y-direction is given
+        return dx, dy
+    return None
+
+def export_scale(transformation):
+    match = re.search(r'scale\(([-\d.e]+)(?:,\s*([-\d.e]+))?\)', transformation)
+    if match:
+        sx = float(match.group(1))
+        sy = float(match.group(2)) if match.group(2) else sx
+        return sx, sy
+    return None
+
+def export_skew_x(transformation):
+    match = re.search(r'skewX\(([-\d.e]+)\)', transformation)
+    if match:
+        return float(match.group(1))
+    return None
+
+def export_skew_y(transformation):
+    match = re.search(r'skewY\(([-\d.]+)\)', transformation)
+    if match:
+        return float(match.group(1))
+    return None
+
+def export_matrix(transformation):
+    match = re.search(r'matrix\(([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+)\)',
+                      transformation)
+    if match:
+        return tuple(float(match.group(i)) for i in range(1, 7))
+    return None  # Return None if no matrix transformation is found
 
 # geometric functions
 
