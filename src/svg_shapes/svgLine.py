@@ -2,7 +2,7 @@
 
 class SvgLine:
 
-    def __init__(self, element):
+    def __init__(self, element, svg_height):
         self.name = 'line'
         self.x1 = float(element.get('x1'))
         self.y1 = float(element.get('y1'))

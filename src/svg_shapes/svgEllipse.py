@@ -1,7 +1,7 @@
 
 class SvgEllipse:
 
-    def __init__(self, element):
+    def __init__(self, element, svg_height):
         self.name = 'ellipse'
         self.center_x = float(element.get('cx'))
         self.center_y = float(element.get('cy'))
