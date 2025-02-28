@@ -12,6 +12,11 @@ def setup_logger(name, log_file="swissmade365.log", log_level=logging.DEBUG):
         return logger
 
     # console handler
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.WARNING)
+    stream_formatter = logging.Formatter(LOG_FORMAT)
+    stream_handler.setFormatter(stream_formatter)
+    logger.addHandler(stream_handler)
 
     # file handler
     file_handler = logging.FileHandler(log_file)
