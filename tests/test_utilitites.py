@@ -1,6 +1,7 @@
 import unittest
 from src.utilities import rotate_clockwise_around_svg_origin, export_rotation, change_svg_to_dxf_coordinate, \
-    calculate_euclidean_norm, calculate_scalar_product, calculate_angle_between_vectors_in_rad
+    calculate_euclidean_norm, calculate_scalar_product, calculate_angle_between_vectors_in_rad, export_translation, \
+    export_scale, export_skew_x, export_skew_y, export_matrix
 import math
 from unittest.mock import Mock
 
@@ -31,10 +32,69 @@ class TestUtilities(unittest.TestCase):
 
     def test_export_rotation(self):
             normal_rotation = "rotate(42.699784)"
-            self.assertEqual(export_rotation(normal_rotation), 42.699784)
+            self.assertEqual(export_rotation(normal_rotation), (42.699784, 0, 0))
 
             non_rotation = "translation(40)"
-            self.assertEqual(export_rotation(non_rotation), 0)
+            self.assertEqual(export_rotation(non_rotation), None)
+
+            rotation_around_point = "rotate(30, 200, 200)"
+            self.assertEqual(export_rotation(rotation_around_point), (30, 200, 200))
+
+
+    def test_export_translation(self):
+        transform = "translate(50,50)"
+        self.assertEqual(export_translation(transform), (50, 50))
+
+        transform = "translate(-50,0.5)"
+        self.assertEqual(export_translation(transform), (-50, 0.5))
+
+        transform_wrong = "translation(80,80)"
+        self.assertEqual(export_translation(transform_wrong), None)
+
+    def test_export_scale(self):
+        scale = "scale(2, 0.5)"
+        self.assertEqual(export_scale(scale), (2, 0.5))
+
+        sx = 1/math.pi
+        scale_only_x = f"scale({sx})"
+        self.assertEqual(export_scale(scale_only_x), (sx, sx))
+
+        no_scale = "rotation(10)"
+        self.assertEqual(export_scale(no_scale), None)
+
+    def test_export_skew(self):
+        angle = 8.135
+        skew_x = f"skewX({angle})"
+        self.assertEqual(export_skew_x(skew_x), angle)
+
+        no_skew = "translate(nothing)"
+        self.assertEqual(export_skew_x(no_skew), None)
+
+        skew_y = f"skewY({angle})"
+        self.assertEqual(export_skew_y(skew_y), angle)
+
+        self.assertEqual(export_skew_y(no_skew), None)
+
+        to_much_info = "skewX(20,3)"
+        self.assertEqual(export_skew_x(to_much_info), None)
+
+        to_much_info = "skewY(20,3)"
+        self.assertEqual(export_skew_y(to_much_info), None)
+
+
+    def test_export_matrix(self):
+        classic_mat = "matrix(2, 3, 0.5,   8, 0.12,2)"
+        self.assertEqual(export_matrix(classic_mat), (2, 3, 0.5, 8, 0.12, 2))
+
+        no_mat = "translate(50)"
+        self.assertEqual(export_matrix(no_mat), None)
+
+        few_info = "matrix(1, 1, 1, 1, 1)"
+        self.assertEqual(export_rotation(few_info), None)
+
+        to_much_info = "matrix(1, 1, 1, 1, 1, 1, 1, 1)"
+        self.assertEqual(export_matrix(to_much_info), None)
+
 
     def test_euclidean_norm(self):
         x = (3, 4)
