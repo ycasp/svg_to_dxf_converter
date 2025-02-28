@@ -197,7 +197,3 @@ def scale_file_param(root, scale_x, scale_y):
                 svg_logger.info(f"svg_element without matching figure tag: {element.tag}: {element.attrib}")
 
     return root
-
-
-def enforce_cut_rules(root):
-    print(root.tag)
