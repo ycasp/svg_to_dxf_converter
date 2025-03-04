@@ -21,7 +21,7 @@ class SvgHeader:
             svg_header_logger.info('no height was specified in svg file - height is taken from view box')
             self.height = self.view_box[3]
 
-    def get_header_name(self):
+    def get_name(self):
         return self.name
 
     def get_header_width(self):
@@ -29,6 +29,11 @@ class SvgHeader:
 
     def get_header_height(self):
         return self.height
+
+    def scale(self, scale_x, scale_y):
+        self.width = self.width * scale_x
+        self.height = self.height * scale_y
+        self.view_box = [self.view_box[0], self.view_box[1], self.width, self.height]
 
 
 def extract_header_width(width_string):

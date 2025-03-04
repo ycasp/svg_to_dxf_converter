@@ -24,5 +24,11 @@ class SvgEllipse:
                                         rotation[0], 0, 0)
 
 
-    def get_ellipse_name(self):
+    def get_name(self):
         return self.name
+
+    def scale(self, scale_x, scale_y):
+        self.center_x = self.center_x * scale_x
+        self.center_y = self.center_y * scale_y
+        self.radius_x = (self.radius_x[0] * scale_x, self.radius_x[1] * scale_y)
+        self.radius_y = (self.radius_y[0] * scale_x, self.radius_y[1] * scale_y)

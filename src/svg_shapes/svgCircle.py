@@ -22,5 +22,10 @@ class SvgCircle:
         # extract radius
         self.radius = float(segment.get('r'))
 
-    def get_circle_name(self):
+    def get_name(self):
         return self.name
+
+    def scale(self, scale_x, scale_y):
+        self.center_x = self.center_x * scale_x
+        self.center_y = self.center_y * scale_y
+        self.radius = self.radius * scale_x
