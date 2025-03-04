@@ -1,6 +1,4 @@
-import logging
 import unittest
-from token import EQUAL
 
 from src.svg_shapes.svgHeader import *
 
@@ -30,7 +28,7 @@ class TestSvgHeader(unittest.TestCase):
     def test_getters(self):
         header_px = SvgHeader(self.px_element)
 
-        self.assertEqual(header_px.get_header_name(), 'header')
+        self.assertEqual(header_px.get_name(), 'header')
         self.assertEqual(header_px.get_header_height(), 800 * 25.4 / 96)
         self.assertEqual(header_px.get_header_width(), 800 * 25.4 / 96)
 

@@ -2,39 +2,40 @@ import unittest
 
 
 from src.shapes.polygon import Polygon
+from src.svg_shapes import SvgPolyline, SvgPolygon
 from src.utilities import change_svg_to_dxf_coordinate
 from unittest.mock import Mock
 
 class TestPolygon(unittest.TestCase):
+    def setUp(self):
+        self.svg_height = 100
+
+        element_points = {'points': "0,0 10,10 20,40 20,-40 10,-10, 0,0"}
+        self.svg_polygon = SvgPolygon(element_points, self.svg_height)
+
+        element_empty_points = {'points': ""}
+        self.svg_empty_polygon = SvgPolygon(element_empty_points, self.svg_height)
 
     def test_initialization(self):
-        height = 100
-        points = "0,0 10,10 20,40 20,-40 10,-10, 0,0"
+        manual_points = [(0, change_svg_to_dxf_coordinate(0, self.svg_height)),
+                         (10, change_svg_to_dxf_coordinate(10, self.svg_height)),
+                         (20, change_svg_to_dxf_coordinate(40, self.svg_height)),
+                         (20, change_svg_to_dxf_coordinate(-40, self.svg_height)),
+                         (10, change_svg_to_dxf_coordinate(-10, self.svg_height)),
+                         (0, change_svg_to_dxf_coordinate(0, self.svg_height))]
 
-        manual_points = [(0, change_svg_to_dxf_coordinate(0, height)),
-                         (10, change_svg_to_dxf_coordinate(10, height)),
-                         (20, change_svg_to_dxf_coordinate(40, height)),
-                         (20, change_svg_to_dxf_coordinate(-40, height)),
-                         (10, change_svg_to_dxf_coordinate(-10, height)),
-                         (0, change_svg_to_dxf_coordinate(0, height))]
-
-        polygon = Polygon(points, height)
+        polygon = Polygon(self.svg_polygon)
 
         self.assertEqual(polygon.points_list, manual_points)
 
     def test_empty_points(self):
-        height = 100
-        points = ""
-
-        empty_polygon = Polygon(points, height)
+        empty_polygon = Polygon(self.svg_empty_polygon)
 
         self.assertEqual(empty_polygon.points_list, [])
 
 
     def test_draw_dxf_polygon(self):
-        height = 100
-        points = "0,0 10,10 20,40 20,-40 10,-10, 0,0"
-        polygon = Polygon(points, height)
+        polygon = Polygon(self.svg_polygon)
 
         mock_msp = Mock()
 

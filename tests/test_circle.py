@@ -1,33 +1,24 @@
 import unittest
 
 from src.shapes.circle import Circle
+from src.svg_shapes import SvgCircle
 from src.utilities import change_svg_to_dxf_coordinate
 from unittest.mock import Mock
 
 
 class TestCircle(unittest.TestCase):
+    def setUp(self):
+        self.svg_height = 300
+        circle = {'cx': "35.732212", 'cy': "36.116428", 'r': "20"}
+        self.svg_circle = SvgCircle(circle, self.svg_height)
 
     def test_initialization(self):
-        height = 300
-        cx = "35.732212"
-        cy = "36.116428"
-        r = "20"
-        circle = Circle(cx, cy, r, height)
-        self.assertEqual(circle.center, (float(cx), change_svg_to_dxf_coordinate(float(cy), height)))
-        self.assertEqual(circle.radius, float(r))
-
-    def test_wrong_center_initialization(self):
-        height = 300
-        cx = "35.732212"
-        cy = "36.116428"
-        r = "20"
-        circle_wrong_center = Circle(cy, cx, r, height)
-        self.assertNotEqual(circle_wrong_center.center, (float(cx), change_svg_to_dxf_coordinate(float(cy), height)))
-        self.assertEqual(circle_wrong_center.radius, float(r))
+        circle = Circle(self.svg_circle)
+        self.assertEqual(circle.center, (35.732212, change_svg_to_dxf_coordinate(36.116428, self.svg_height)))
+        self.assertEqual(circle.radius, 20)
 
     def test_draw_dxf_circle(self):
-        height = 300
-        circle = Circle(35.732212, 36.116428, 20, height)
+        circle = Circle(self.svg_circle)
 
         mock_msp = Mock()
 

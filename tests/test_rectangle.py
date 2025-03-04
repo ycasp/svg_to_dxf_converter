@@ -2,6 +2,7 @@ import unittest
 
 from src.shapes.rectangle import (Rectangle, export_rotation, ensure_applicable_radius,
                                   rotate_clockwise_around_svg_origin)
+from src.svg_shapes import SvgRectangle
 from src.utilities import change_svg_to_dxf_coordinate
 from unittest.mock import Mock
 
@@ -11,44 +12,37 @@ class TestRectangle(unittest.TestCase):
         self.height = 100
         self.msp_mock = Mock()
 
+        element_basic_rect = {'x': 10, 'y': 10, 'width': 100, 'height': 50}
+        self.svg_basic_rect = SvgRectangle(element_basic_rect, self.height)
+
+        element_rotated_rect = {'x': 0, 'y': 0, 'width': 100, 'height': 100, 'transform': "rotate(90)"}
+        self.svg_rotated_rect = SvgRectangle(element_rotated_rect, self.height)
+
+        element_rounded_rect = {'x': 10, 'y': 10, 'width': 100, 'height': 50, 'transform': "rotate(42.699784)",
+        'rx': 9, 'ry': 7}
+        self.svg_rounded_rect = SvgRectangle(element_rounded_rect, self.height)
+
     def test_basic_initialization(self):
-        x = "10"; y = "10"; width = "100"; rect_height = "50"
-        transformation = None; rx = None; ry = None; rot_angle = 0
-        basic_rect = Rectangle(x, y, width, rect_height, transformation, rx, ry, self.height, rot_angle)
-        self.assertEqual(basic_rect.x, float(x))
-        self.assertEqual(basic_rect.y, change_svg_to_dxf_coordinate(float(y), self.height))
-        self.assertEqual(basic_rect.width, float(width))
-        self.assertEqual(basic_rect.rect_height, (-1) * float(rect_height))
+        basic_rect = Rectangle(self.svg_basic_rect)
+        self.assertEqual(basic_rect.x, 10)
+        self.assertEqual(basic_rect.y, 90)
+        self.assertEqual(basic_rect.width, 100)
+        self.assertEqual(basic_rect.rect_height, (-1) * 50)
         self.assertEqual(basic_rect.transformation, None)
         self.assertEqual(basic_rect.rx, 0)
         self.assertEqual(basic_rect.ry, 0)
         self.assertEqual(basic_rect.rot_angle, 0)
 
     def test_rotated_rectangle(self):
-        width = "30.882156"
-        rect_height = "32.285889"
-        x = "140.85437"
-        y = "53.877674"
-        transform = "rotate(42.699784)"
-        rx = None; ry = None
+        rotated_rect = Rectangle(self.svg_rotated_rect)
 
-        rotated_rect = Rectangle(x, y, width, rect_height, transform, rx, ry, self.height)
-
-        self.assertEqual(rotated_rect.rot_angle, 42.699784)
+        self.assertEqual(rotated_rect.rot_angle, 90)
 
     def test_rounded_rectangle(self):
-        width = "30.882156"
-        rect_height = "32.285889"
-        x = "140.85437"
-        y = "53.877674"
-        transform = None
-        rx = "5"
-        ry = "7"
+        rounded_rect = Rectangle(self.svg_rounded_rect)
 
-        rounded_rect = Rectangle(x, y, width, rect_height, transform, rx, ry, self.height)
-
-        self.assertEqual(rounded_rect.rx, float(rx))
-        self.assertEqual(rounded_rect.ry, float(ry))
+        self.assertEqual(rounded_rect.rx, 9)
+        self.assertEqual(rounded_rect.ry, 7)
 
     def test_ensure_applicable_radius(self):
         width = 100
@@ -60,28 +54,28 @@ class TestRectangle(unittest.TestCase):
 
     def test_draw_dxf_rect_basic(self):
         """Test drawing a rectangle without rounded corners"""
-        rect = Rectangle(10, 20, 50, 30, None, 0, 0, self.height)
+        rect = Rectangle(self.svg_basic_rect)
         rect.draw_dxf_rect(self.msp_mock, self.height)
-
         # Check if a polyline was added
-        self.msp_mock.add_lwpolyline.assert_called_once_with([(10,80), (60, 80), (60,50), (10, 50)], close = True)
+        self.msp_mock.add_lwpolyline.assert_called_once_with([(10,90), (110, 90), (110,40), (10, 40)], close = True)
 
     def test_draw_dxf_rect_rotated(self):
-        rect = Rectangle(0,0, 100, 100, "rotate(90)", 0, 0, self.height)
+        rect = Rectangle(self.svg_rotated_rect)
         rect.draw_dxf_rect(self.msp_mock, self.height)
 
         self.msp_mock.add_lwpolyline.assert_called_once_with([(0, 100), (0,0), (-100, 0), (-100, 100)], close = True)
 
     def test_draw_rounded_rectangle(self):
         # rx == 0. ry == 0 --> line, ellipse not called
-        edgy_rect = Rectangle(10, 20, 70, 50, None,
-                                   rx = 0, ry = 0, height = self.height)
+        edgy_rect = Rectangle(self.svg_basic_rect)
         edgy_rect.draw_dxf_rect(self.msp_mock, self.height)
         self.msp_mock.add_line.assert_not_called()
 
         # rx != 0, ry == 0
-        rx_rounded_rect = Rectangle(10, 20, 70, 50, None,
-                              rx=4, ry=0, height=self.height)
+        element_rounded_rect = {'x': 10, 'y': 20, 'width': 70, 'height': 50, 'transform': None,
+        'rx': 4, 'ry': 0}
+        svg_rounded_rect_rx = SvgRectangle(element_rounded_rect, self.height)
+        rx_rounded_rect = Rectangle(svg_rounded_rect_rx)
         rx_rounded_rect.draw_dxf_rect(self.msp_mock, self.height)
         self.msp_mock.add_lwpolyline_assert_not_called()
         self.assertTrue(self.msp_mock.add_line.call_count == 4)
@@ -89,8 +83,10 @@ class TestRectangle(unittest.TestCase):
         self.msp_mock.reset_mock()
 
         # rx == 0, ry != 0
-        ry_rounded_rect = Rectangle(10, 20, 70, 50, None,
-                                    rx=0, ry=4, height=self.height)
+        element_rounded_rect = {'x': 10, 'y': 20, 'width': 70, 'height': 50, 'transform': None,
+            'rx': 0, 'ry': 4}
+        svg_rounded_rect_ry = SvgRectangle(element_rounded_rect, self.height)
+        ry_rounded_rect = Rectangle(svg_rounded_rect_ry)
         ry_rounded_rect.draw_dxf_rect(self.msp_mock, self.height)
         self.msp_mock.add_lwpolyline_assert_not_called()
         self.assertTrue(self.msp_mock.add_line.call_count == 4)
@@ -98,8 +94,10 @@ class TestRectangle(unittest.TestCase):
         self.msp_mock.reset_mock()
 
         # rx != 0, ry != 0
-        rounded_rect = Rectangle(10, 20, 70, 50, None,
-                                    rx=4, ry=4, height=self.height)
+        element_rounded_rect = {'x': 10, 'y': 20, 'width': 70, 'height': 50, 'transform': None,
+            'rx': 8, 'ry': 4}
+        svg_rounded_rect = SvgRectangle(element_rounded_rect, self.height)
+        rounded_rect = Rectangle(svg_rounded_rect)
         rounded_rect.draw_dxf_rect(self.msp_mock, self.height)
         self.msp_mock.add_lwpolyline_assert_not_called()
         self.assertTrue(self.msp_mock.add_line.call_count == 4)

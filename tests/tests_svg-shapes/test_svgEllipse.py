@@ -27,7 +27,7 @@ class TestSvgEllipse(unittest.TestCase):
 
     def test_getters(self):
         normal_ellipse = SvgEllipse(self.normal_ellipse, self.svg_height)
-        self.assertEqual(normal_ellipse.get_ellipse_name(), 'ellipse')
+        self.assertEqual(normal_ellipse.get_name(), 'ellipse')
 
         rot_ellipse = SvgEllipse(self.rotated_ellipse, self.svg_height)
-        self.assertNotEqual(rot_ellipse.get_ellipse_name(), 'circle')
+        self.assertNotEqual(rot_ellipse.get_name(), 'circle')

@@ -1,9 +1,11 @@
 import unittest
+import math
+
 from src.utilities import rotate_clockwise_around_svg_origin, export_rotation, change_svg_to_dxf_coordinate, \
     calculate_euclidean_norm, calculate_scalar_product, calculate_angle_between_vectors_in_rad, export_translation, \
     export_scale, export_skew_x, export_skew_y, export_matrix
-import math
-from unittest.mock import Mock
+
+
 
 class TestUtilities(unittest.TestCase):
 
@@ -36,6 +38,9 @@ class TestUtilities(unittest.TestCase):
 
             non_rotation = "translation(40)"
             self.assertEqual(export_rotation(non_rotation), None)
+
+            no_transformation = None
+            self.assertEqual(export_rotation(no_transformation), None)
 
             rotation_around_point = "rotate(30, 200, 200)"
             self.assertEqual(export_rotation(rotation_around_point), (30, 200, 200))

@@ -29,7 +29,7 @@ class TestSvgCircle(unittest.TestCase):
 
     def test_getters(self):
         normal_circle = SvgCircle(self.normal_circle, self.svg_height)
-        self.assertEqual(normal_circle.get_circle_name(), 'circle')
+        self.assertEqual(normal_circle.get_name(), 'circle')
 
         rot_circle = SvgCircle(self.rot_circle, self.svg_height)
-        self.assertEqual(rot_circle.get_circle_name(), 'circle')
+        self.assertEqual(rot_circle.get_name(), 'circle')
