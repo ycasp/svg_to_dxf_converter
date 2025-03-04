@@ -3,6 +3,10 @@ import re
 
 import numpy as np
 
+from src.logging_config import setup_logger
+
+utilities_logger = setup_logger(__name__)
+
 # svg transformation functions
 
 def change_svg_to_dxf_coordinate(y, height):
@@ -26,48 +30,78 @@ def export_rotation(transformation):
     :param transformation: transformation message of the svg object
     :return: rotation angle given in the transformation message, if none is given, it returns 0
     """
-    match = re.search(r'rotate\(([-\d.e]+)(?:,\s*([-\d.e]+),\s*([-\d.e]+))?\)', transformation)
-    if match:
-        angle = float(match.group(1))  # Extract the angle
-        cx = float(match.group(2)) if match.group(2) else 0  # Default cx = 0 if not present
-        cy = float(match.group(3)) if match.group(3) else 0  # Default cy = 0 if not present
-        return angle, cx, cy
-    return None  # Default values if no rotation is found
+    try:
+        match = re.search(r'rotate\(([-\d.e]+)(?:,\s*([-\d.e]+),\s*([-\d.e]+))?\)', transformation)
+    except TypeError as e:
+        utilities_logger.exception(e)
+        return None
+    else:
+        if match:
+            angle = float(match.group(1))  # Extract the angle
+            cx = float(match.group(2)) if match.group(2) else 0  # Default cx = 0 if not present
+            cy = float(match.group(3)) if match.group(3) else 0  # Default cy = 0 if not present
+            return angle, cx, cy
+        return None  # Default values if no rotation is found
 
 def export_translation(transformation):
-    match = re.search(r'translate\(([-\d.e]+),\s*([-\d.e]+)\)', transformation)
-    if match:
-        dx = float(match.group(1))
-        dy = float(match.group(2)) # if no translation in y-direction is given
-        return dx, dy
-    return None
+    try:
+        match = re.search(r'translate\(([-\d.e]+),\s*([-\d.e]+)\)', transformation)
+    except TypeError as e:
+        utilities_logger.exception(e)
+        return None
+    else:
+        if match:
+            dx = float(match.group(1))
+            dy = float(match.group(2)) # if no translation in y-direction is given
+            return dx, dy
+        return None
 
 def export_scale(transformation):
-    match = re.search(r'scale\(([-\d.e]+)(?:,\s*([-\d.e]+))?\)', transformation)
-    if match:
-        sx = float(match.group(1))
-        sy = float(match.group(2)) if match.group(2) else sx
-        return sx, sy
-    return None
+    try:
+        match = re.search(r'scale\(([-\d.e]+)(?:,\s*([-\d.e]+))?\)', transformation)
+    except TypeError as e:
+        utilities_logger.exception(e)
+        return None
+    else:
+        if match:
+            sx = float(match.group(1))
+            sy = float(match.group(2)) if match.group(2) else sx
+            return sx, sy
+        return None
 
 def export_skew_x(transformation):
-    match = re.search(r'skewX\(([-\d.e]+)\)', transformation)
-    if match:
-        return float(match.group(1))
-    return None
+    try:
+        match = re.search(r'skewX\(([-\d.e]+)\)', transformation)
+    except TypeError as e:
+        utilities_logger.exception(e)
+        return None
+    else:
+        if match:
+            return float(match.group(1))
+        return None
 
 def export_skew_y(transformation):
-    match = re.search(r'skewY\(([-\d.]+)\)', transformation)
-    if match:
-        return float(match.group(1))
-    return None
+    try:
+        match = re.search(r'skewY\(([-\d.]+)\)', transformation)
+    except TypeError as e:
+        utilities_logger.exception(e)
+        return None
+    else:
+        if match:
+            return float(match.group(1))
+        return None
 
 def export_matrix(transformation):
-    match = re.search(r'matrix\(([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+)\)',
+    try:
+        match = re.search(r'matrix\(([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+)\)',
                       transformation)
-    if match:
-        return tuple(float(match.group(i)) for i in range(1, 7))
-    return None  # Return None if no matrix transformation is found
+    except TypeError as e:
+        utilities_logger.exception(e)
+        return None
+    else:
+        if match:
+            return tuple(float(match.group(i)) for i in range(1, 7))
+        return None  # Return None if no matrix transformation is found
 
 # geometric functions
 
@@ -100,6 +134,11 @@ def rotate_counterclockwise_around_cartesian_origin(x, y, rot_angle):
 
     return (round(x * np.cos(rot_angle_rad) - y * np.sin(rot_angle_rad), 5),
     round(x * np.sin(rot_angle_rad) + y * np.cos(rot_angle_rad), 5))
+
+def rotate_clockwise_around_point(x, y, rot_angle, rot_x, rot_y):
+    rot_angle_rad = math.radians(rot_angle)
+    return (round(rot_x + (x - rot_x) * math.cos(rot_angle_rad) + (y - rot_y) * math.sin(rot_angle_rad), 5),
+    round(rot_y - (x - rot_x) * math.sin(rot_angle_rad) + (y - rot_y) * math.cos(rot_angle_rad), 5))
 
 
 def calculate_angle_between_vectors_in_rad(x_vec, y_vec, large_angle):
