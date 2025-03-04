@@ -10,7 +10,7 @@ class Line:
         end (tuple): endpoint of the line
     """
 
-    def __init__(self, x1, y1, x2, y2, height):
+    def __init__(self, svg_line):
         """
         Initializes the line object.
 
@@ -20,8 +20,8 @@ class Line:
         :param y2: y-coordinate (in svg format) of end point
         :param height: height of svg format, used to convert y-coordinates in to cartesian form
         """
-        self.start = (float(x1), change_svg_to_dxf_coordinate(float(y1), height))
-        self.end = (float(x2), change_svg_to_dxf_coordinate(float(y2), height))
+        self.start = (svg_line.x1, svg_line.y1)
+        self.end = (svg_line.x2, svg_line.y2)
 
     def draw_dxf_line(self, msp):
         """

@@ -1,6 +1,7 @@
 import math
 
 from src.shapes.ellipse import Ellipse
+from src.svg_shapes import SvgEllipse
 from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin
 
 
@@ -17,7 +18,7 @@ class Rectangle:
         rot_angle (float): rotation angle of the rectangle (in degree) given in the transformation message (default value 0)
     """
 
-    def __init__(self, x, y, width, rect_height, transformation, rx, ry, height, rot_angle=0):
+    def __init__(self, svg_rectangle, rot_angle=0):
         """
         Initializes a rectangle object
         :param x: x-coordinate of top left corner
@@ -30,30 +31,15 @@ class Rectangle:
         :param height: height of the svg file for coordinate transformation to cartesian coordinates
         :param rot_angle: rotation angle of the rectangle, in degree, around the point (0, height)
         """
-        # x,y are coordinates of the top left corners
-        self.x = float(x)
-        self.y = change_svg_to_dxf_coordinate(float(y), height)
-        # width is x-coord length of rect
-        self.width = float(width)
-        # rect_height is y-coord length of rect
-        # as y-coord in svg and dxf is in different direction: * (-1)
-        self.rect_height = (-1) * float(rect_height)
-        # transformation message: until now, only rotation
-        self.transformation = transformation
+        self.x = svg_rectangle.x
+        self.y = svg_rectangle.y
+        self.width = svg_rectangle.rect_width
+        self.rect_height = svg_rectangle.rect_height
+        self.rx = svg_rectangle.rx
+        self.ry = svg_rectangle.ry
+        self.transformation = svg_rectangle.transform
 
-        # rx / ry are radius of rounded corners
-        # if rx/ry is None, we have no radius in this direction --> ensures rx/ry is float, at least 0
-        if rx is None:
-            self.rx = 0
-        else:
-            self.rx = float(rx)
-
-        if ry is None:
-            self.ry = 0
-        else:
-            self.ry = float(ry)
-
-        self.rot_angle = float(rot_angle)
+        self.rot_angle = rot_angle
         if self.transformation is not None:
             # check for rotation
             self.rot_angle, _, _ = export_rotation(self.transformation)
@@ -119,20 +105,29 @@ class Rectangle:
 
         # add arcs / ellipses
         # top right corner
-        c1 = Ellipse(self.x + self.width - rx, (self.y - ry - height) * (-1), rx, ry,
-                     None, height, self.rot_angle, 0, 1 / 2 * math.pi)
+        top_right_ellipse_element = {'cx':self.x + self.width - rx, 'cy':(self.y - ry - height) * (-1), 'rx':rx, 'ry':ry,
+        'transform': f"rotate({self.rot_angle})"}
+        top_right_ellipse = SvgEllipse(top_right_ellipse_element, height)
+        c1 = Ellipse(top_right_ellipse, 0, 1 / 2 * math.pi)
         c1.draw_dxf_ellipse(msp)
+
         # bottom right corner
-        c2 = Ellipse(self.x + self.width - rx, (self.y + self.rect_height + ry - height) * (-1), rx, ry,
-                     None, height, self.rot_angle, 3 / 2 * math.pi, 2 * math.pi)
+        bottom_right_ellipse_element = {'cx':self.x + self.width - rx, 'cy':(self.y + self.rect_height + ry - height) * (-1), 'rx':rx, 'ry':ry,
+        'transform': f"rotate({self.rot_angle})"}
+        bottom_right_ellipse = SvgEllipse(bottom_right_ellipse_element, height)
+        c2 = Ellipse(bottom_right_ellipse, 3 / 2 * math.pi, 2 * math.pi)
         c2.draw_dxf_ellipse(msp)
         # bottom left corner
-        c3 = Ellipse(self.x + rx, (-1) * (self.y + self.rect_height + ry - height), rx, ry,
-                     None, height, self.rot_angle, math.pi, 3 / 2 * math.pi)
+        bottom_left_ellipse_element = {'cx':self.x + rx, 'cy':(self.y + self.rect_height + ry - height) * (-1), 'rx':rx, 'ry':ry,
+        'transform': f"rotate({self.rot_angle})"}
+        bottom_right_ellipse = SvgEllipse(bottom_left_ellipse_element, height)
+        c3 = Ellipse(bottom_right_ellipse, math.pi, 3 / 2 * math.pi)
         c3.draw_dxf_ellipse(msp)
         # top left corner
-        c4 = Ellipse(self.x + rx, (-1) * (self.y - ry - height), rx, ry,
-                     None, height, self.rot_angle, 1 / 2 * math.pi, math.pi)
+        top_left_ellipse_element = {'cx': self.x + rx, 'cy': (self.y - ry - height) * (-1), 'rx': rx, 'ry': ry,
+            'transform': f"rotate({self.rot_angle})"}
+        top_left_ellipse = SvgEllipse(top_left_ellipse_element, height)
+        c4 = Ellipse(top_left_ellipse, 1 / 2 * math.pi, math.pi)
         c4.draw_dxf_ellipse(msp)
 
 

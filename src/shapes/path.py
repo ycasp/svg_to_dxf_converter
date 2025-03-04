@@ -26,12 +26,12 @@ class Path:
     # constant for spline approx of Bézier curves
     G1_TOL = 1e-2
 
-    def __init__(self, path):
+    def __init__(self, svg_path):
         """
         Initializes the path object.
         :param path: string with the path attributes (points, path type)
         """
-        self.path = path
+        self.path = svg_path.path
 
     def draw_svg_path(self, msp, height):
         """

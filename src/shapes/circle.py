@@ -1,5 +1,5 @@
 from src.utilities import change_svg_to_dxf_coordinate
-
+from src.svg_shapes.svgCircle import SvgCircle
 
 class Circle:
     """
@@ -10,18 +10,9 @@ class Circle:
         radius (float): radius of the circle.
     """
 
-    def __init__(self, cx, cy, radius, height):
-        """
-        Initializes the circle object.
-
-        :param cx: x-coordinate of the center
-        :param cy: y-coordinate of the center (svg coordinate)
-        :param radius: radius of the center
-        :param height: height of the svg file (to transform svg coordinate to cartesian coordinates)
-        """
-        center_y = change_svg_to_dxf_coordinate(float(cy), height)
-        self.center = (float(cx), center_y)
-        self.radius = float(radius)
+    def __init__(self,svg_circle):
+        self.center = (svg_circle.center_x, svg_circle.center_y)
+        self.radius = svg_circle.radius
 
     def draw_dxf_circle(self, msp):
         """
