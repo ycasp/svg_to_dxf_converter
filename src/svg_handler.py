@@ -4,6 +4,9 @@ from xml.etree.ElementTree import ParseError
 from src.logging_config import setup_logger
 from src.scaling_functions import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
 
+from src.svg_shapes import *
+
+
 svg_logger = setup_logger(__name__)
 
 
@@ -23,8 +26,38 @@ def read_svg_file(name):
     try:
         tree = ElementTree.parse(file_path)
         root = tree.getroot()
-        return root
 
+        svg_figures = []
+
+        header = SvgHeader(root)
+        svg_height = header.get_header_height()
+        svg_figures.append(header)
+
+        # iterate through svg content
+        for element in root.iter():
+            match element.tag:
+                #case '{http://www.w3.org/2000/svg}svg':
+                #    header = SvgHeader(element)
+                #    svg_height = header.get_header_height()
+                #    svg_figures.append(header)
+                case '{http://www.w3.org/2000/svg}circle':
+                    svg_figures.append(SvgCircle(element, svg_height))
+                case '{http://www.w3.org/2000/svg}ellipse':
+                    svg_figures.append(SvgEllipse(element, svg_height))
+                case '{http://www.w3.org/2000/svg}rect':
+                    svg_figures.append(SvgRectangle(element, svg_height))
+                case '{http://www.w3.org/2000/svg}line':
+                    svg_figures.append(SvgLine(element, svg_height))
+                case '{http://www.w3.org/2000/svg}polygon':
+                    svg_figures.append(SvgPolygon(element, svg_height))
+                case '{http://www.w3.org/2000/svg}polyline':
+                    svg_figures.append(SvgPolyline(element, svg_height))
+                case '{http://www.w3.org/2000/svg}path':
+                    svg_figures.append(SvgPath(element, svg_height))
+                case _:
+                    svg_logger.info(f"svg_element without matching figure tag: {element.tag}: {element.attrib}")
+
+        return svg_figures
     except ParseError as parseErr:
         svg_logger.exception(parseErr)
     except FileNotFoundError as pathErr:
@@ -156,11 +189,11 @@ def scale_file(root, new_width, new_height):
     return root
 
 
-def scale_file_param(root, scale_x, scale_y):
+def scale_file_param(svg_figures, scale_x, scale_y):
     """
     Scales all figures in a svg file. Changes the attributes in the tree.
 
-    :param root: tree with svg figures
+    :param svg_figures: list with svg figures
     :param scale_x: integer scaling factor in x direction
     :param scale_y: integer scaling factor in y direction
     :return: scaled svg content in a root
@@ -169,31 +202,11 @@ def scale_file_param(root, scale_x, scale_y):
     # here no error handling, as we have no (possible) division by zero
 
     # calculate scaling in x/y-direction
-    new_width = scale_x * get_svg_width(root)
-    new_height = scale_y * get_svg_height(root)
+    new_width = scale_x * svg_figures[0].get_header_width()
+    new_height = scale_y * svg_figures[0].get_header_height()
 
     # set new width and height
-    root.set('width', str(new_width) + 'mm')
-    root.set('height', str(new_height) + 'mm')
-    root.set('viewBox', '0 0 ' + str(new_width) + ' ' + str(new_height))
+    for figures in svg_figures:
+        figures.scale(scale_x, scale_y)
 
-    # iterate through svg content
-    for element in root.iter():
-        match element.tag:
-            case '{http://www.w3.org/2000/svg}circle':
-                scale_circle(element, scale_x, scale_y)
-                # cut rules
-            case '{http://www.w3.org/2000/svg}ellipse':
-                scale_ellipse(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}rect':
-                scale_rectangle(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}line':
-                scale_line(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}polygon':
-                scale_polygon(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}path':
-                scale_path(element, scale_x, scale_y)
-            case _:
-                svg_logger.info(f"svg_element without matching figure tag: {element.tag}: {element.attrib}")
-
-    return root
+    return svg_figures
