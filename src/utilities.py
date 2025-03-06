@@ -119,14 +119,12 @@ def rotate_clockwise_around_svg_origin(x, y, rot_angle, height):
     return (round(x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad), 5),
     round(height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad), 5))
 
-
 def rotate_clockwise_around_cartesian_origin(x, y, rot_angle):
     # TODO description + testing
     rot_angle_rad = math.radians(rot_angle)
 
     return (round(x * np.cos(rot_angle_rad) + y * np.sin(rot_angle_rad), 5),
     round(- x * np.sin(rot_angle_rad) + y * np.cos(rot_angle_rad), 5))
-
 
 def rotate_counterclockwise_around_cartesian_origin(x, y, rot_angle):
     # TODO description + testing
@@ -139,6 +137,16 @@ def rotate_clockwise_around_point(x, y, rot_angle, rot_x, rot_y):
     rot_angle_rad = math.radians(rot_angle)
     return (round(rot_x + (x - rot_x) * math.cos(rot_angle_rad) + (y - rot_y) * math.sin(rot_angle_rad), 5),
     round(rot_y - (x - rot_x) * math.sin(rot_angle_rad) + (y - rot_y) * math.cos(rot_angle_rad), 5))
+
+def translate_coordinate(cord, translation):
+    return cord + translation
+
+def scale_coordinate(cord, scaling_factor):
+    return cord * scaling_factor
+
+def matrix_transformation(x, y, matrix_list):
+    return (x * matrix_list[0] + y * matrix_list[2] + matrix_list[4],
+    x * matrix_list[1] + y * matrix_list[3] + matrix_list[5])
 
 
 def calculate_angle_between_vectors_in_rad(x_vec, y_vec, large_angle):
