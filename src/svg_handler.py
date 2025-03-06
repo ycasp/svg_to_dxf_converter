@@ -41,7 +41,13 @@ def read_svg_file(name):
                 #    svg_height = header.get_header_height()
                 #    svg_figures.append(header)
                 case '{http://www.w3.org/2000/svg}circle':
-                    svg_figures.append(SvgCircle(element, svg_height))
+                    circle = SvgCircle(element, svg_height)
+                    if circle.radius_y == 0:
+                        svg_figures.append(circle)
+                    else: # circle.radius_y != 0:
+                        element = {'cx': circle.center_x, 'cy': (-1) * circle.center_y, 'rx': circle.radius, 'ry': circle.radius_y}
+                        ellipse = SvgEllipse(element, 0)
+                        svg_figures.append(ellipse)
                 case '{http://www.w3.org/2000/svg}ellipse':
                     svg_figures.append(SvgEllipse(element, svg_height))
                 case '{http://www.w3.org/2000/svg}rect':
