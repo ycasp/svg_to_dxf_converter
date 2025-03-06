@@ -12,5 +12,5 @@ class SvgPath:
 
     def scale(self, scale_x, scale_y):
         parsed_path = parse_path(self.path)
-        scaled_path = parsed_path.scale(scale_x, scale_y)
+        scaled_path = parsed_path.scaled(scale_x, scale_y)
         self.path = scaled_path.d()
