@@ -1,7 +1,6 @@
 import unittest
 
-from src.shapes.rectangle import (Rectangle, export_rotation, ensure_applicable_radius,
-                                  rotate_clockwise_around_svg_origin)
+from src.shapes.rectangle import Rectangle
 from src.svg_shapes import SvgRectangle
 from src.utilities import change_svg_to_dxf_coordinate
 from unittest.mock import Mock
@@ -18,7 +17,7 @@ class TestRectangle(unittest.TestCase):
         element_rotated_rect = {'x': 0, 'y': 0, 'width': 100, 'height': 100, 'transform': "rotate(90)"}
         self.svg_rotated_rect = SvgRectangle(element_rotated_rect, self.height)
 
-        element_rounded_rect = {'x': 10, 'y': 10, 'width': 100, 'height': 50, 'transform': "rotate(42.699784)",
+        element_rounded_rect = {'x': 10, 'y': 10, 'width': 100, 'height': 50, 'transform': "rotate(45)",
         'rx': 9, 'ry': 7}
         self.svg_rounded_rect = SvgRectangle(element_rounded_rect, self.height)
 
@@ -26,31 +25,26 @@ class TestRectangle(unittest.TestCase):
         basic_rect = Rectangle(self.svg_basic_rect)
         self.assertEqual(basic_rect.x, 10)
         self.assertEqual(basic_rect.y, 90)
-        self.assertEqual(basic_rect.width, 100)
-        self.assertEqual(basic_rect.rect_height, (-1) * 50)
-        self.assertEqual(basic_rect.transformation, None)
-        self.assertEqual(basic_rect.rx, 0)
-        self.assertEqual(basic_rect.ry, 0)
-        self.assertEqual(basic_rect.rot_angle, 0)
+        self.assertEqual(basic_rect.rect_width, (100, 0))
+        self.assertEqual(basic_rect.rect_height, (0, (-1) * 50))
+        self.assertEqual(basic_rect.rx, (0, 0))
+        self.assertEqual(basic_rect.ry, (0, 0))
 
     def test_rotated_rectangle(self):
         rotated_rect = Rectangle(self.svg_rotated_rect)
+        self.assertEqual(rotated_rect.x, 0)
+        self.assertEqual(rotated_rect.y, 100)
+        self.assertEqual(rotated_rect.rect_width, (0, -100))
+        self.assertEqual(rotated_rect.rect_height, (-100, 0))
+        self.assertEqual(rotated_rect.rx, (0, 0))
+        self.assertEqual(rotated_rect.ry, (0, 0))
 
-        self.assertEqual(rotated_rect.rot_angle, 90)
 
     def test_rounded_rectangle(self):
         rounded_rect = Rectangle(self.svg_rounded_rect)
 
-        self.assertEqual(rounded_rect.rx, 9)
-        self.assertEqual(rounded_rect.ry, 7)
-
-    def test_ensure_applicable_radius(self):
-        width = 100
-        applicable_r = 49
-        self.assertEqual(ensure_applicable_radius(applicable_r, width), applicable_r)
-
-        non_applicable_r = 75
-        self.assertEqual(ensure_applicable_radius(non_applicable_r, width), width / 2)
+        self.assertEqual(rounded_rect.rx, (6.36396, -6.36396))
+        self.assertEqual(rounded_rect.ry, (4.94975, 4.94975))
 
     def test_draw_dxf_rect_basic(self):
         """Test drawing a rectangle without rounded corners"""

@@ -2,7 +2,8 @@ import math
 
 from src.shapes.ellipse import Ellipse
 from src.svg_shapes import SvgEllipse
-from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin
+from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin, \
+    calculate_euclidean_norm
 
 
 class Rectangle:
@@ -19,66 +20,98 @@ class Rectangle:
     """
 
     def __init__(self, svg_rectangle, rot_angle=0):
-        """
-        Initializes a rectangle object
-        :param x: x-coordinate of top left corner
-        :param y: y-coordinate of top left corner (in svg format)
-        :param width: lengths of rectangle in x-direction
-        :param rect_height: height of rectangle in y-direction (svg format, positive but goes down)
-        :param transformation: information about transformation of rectangle (like rotation)
-        :param rx: radius in x-direction of rounded corners
-        :param ry: radius in y-direction of rounded corners
-        :param height: height of the svg file for coordinate transformation to cartesian coordinates
-        :param rot_angle: rotation angle of the rectangle, in degree, around the point (0, height)
-        """
+
         self.x = svg_rectangle.x
         self.y = svg_rectangle.y
-        self.width = svg_rectangle.rect_width
+        self.rect_width = svg_rectangle.rect_width
         self.rect_height = svg_rectangle.rect_height
         self.rx = svg_rectangle.rx
         self.ry = svg_rectangle.ry
-        self.transformation = svg_rectangle.transform
-
-        self.rot_angle = rot_angle
-        if self.transformation is not None:
-            # check for rotation
-            self.rot_angle, _, _ = export_rotation(self.transformation)
 
     # draws a rectangle form the given svg data (from a rect attribute) into a dxf modelspace
     def draw_dxf_rect(self, msp, height):
-        """
-        Adds rectangle to dxf file, as polyline.
-
-        :param msp: Modelspace of dxf file, to add lines.
-        :param height: Height of svg file, for coordinates transformation or rotation point
-        :return: -
-        """
-        if self.rx == 0 and self.ry == 0:
-            # Calculate rectangle vertices (DXF uses bottom-left origin)
-            vertices = [
-                rotate_clockwise_around_svg_origin(self.x, self.y, self.rot_angle, height),  # top left
-                rotate_clockwise_around_svg_origin(self.x + self.width, self.y, self.rot_angle, height),  # top right
-                rotate_clockwise_around_svg_origin(self.x + self.width, self.y + self.rect_height, self.rot_angle,
-                                                   height),  # bottom right (height is < 0)
-                rotate_clockwise_around_svg_origin(self.x, self.y + self.rect_height, self.rot_angle, height),
-                # bottem left (height is < 0)
-            ]
-            # Add rectangle as a closed polyline
+        if self.rx == (0, 0) and self.ry == (0, 0):
+            vertices = [ (self.x, self.y), (self.x + self.rect_width[0], self.y + self.rect_width[1]),
+                (self.x + self.rect_width[0] + self.rect_height[0], self.y + self.rect_width[1] + self.rect_height[1]),
+                (self.x + self.rect_height[0], self.y + self.rect_height[1])]
             msp.add_lwpolyline(vertices, close=True)
-        elif self.rx != 0 and self.ry == 0:
-            self.ry = self.rx
-            self.draw_rounded_rectangle(msp, height)
-        elif self.rx == 0 and self.ry != 0:
-            self.rx = self.ry
-            self.draw_rounded_rectangle(msp, height)
-        elif self.rx != 0 and self.ry != 0:
+        else:
             self.draw_rounded_rectangle(msp, height)
 
     def draw_rounded_rectangle(self, msp, height):
-        # ensure that rx/ry are only half of width / height
-        rx = ensure_applicable_radius(self.rx, self.width)
-        ry = ensure_applicable_radius(self.ry, self.rect_height * (-1))
+        # define corner points
+        # top left vertice, after arc
+        p1 = (self.x + self.rx[0],
+                self.y + self.rx[1])
+        # top right vertice, before arc
+        p2 = (self.x + self.rect_width[0] - self.rx[0],
+                self.y + self.rect_width[1] - self.rx[1])
+        # top right vertice, after arc
+        p3 = (self.x + self.rect_width[0] - self.ry[0],
+                self.y + self.rect_width[1] - self.ry[1])
+        # bottem right vertice, before arc
+        p4 = (self.x + self.rect_width[0] + self.rect_height[0] + self.ry[0],
+                self.y + self.rect_width[1] + self.rect_height[1] + self.ry[1])
+        # bottom right vertice, after arc
+        p5 = (self.x + self.rect_width[0] + self.rect_height[0] - self.rx[0],
+                self.y + self.rect_width[1] +self.rect_height[1] - self.rx[1])
+        # bottom left vertice, before arc
+        p6 = (self.x + self.rect_height[0] + self.rx[0],
+                self.y + self.rect_height[1] + self.rx[1])
+        # bottom left vertice, after arc
+        p7 = (self.x + self.rect_height[0] + self.ry[0],
+                self.y + self.rect_height[1] + self.ry[1])
+        # top left vertice, before arc
+        p8 = (self.x - self.ry[0],
+                self.y - self.ry[1])
 
+        # add edges
+        msp.add_line(p1, p2)  # top edge
+        msp.add_line(p3, p4)  # right edge
+        msp.add_line(p5, p6)  # bottom ege
+        msp.add_line(p7, p8)  # left edge
+
+        # add rounded corners
+        rot_flag = 0
+
+        # determine major axis
+        norm_rx = calculate_euclidean_norm(self.rx)
+        norm_ry = calculate_euclidean_norm(self.ry)
+
+        if norm_rx >= norm_ry:
+            major_axis = self.rx
+            ratio = norm_ry / norm_rx
+        else:
+            major_axis = self.ry
+            ratio = norm_rx / norm_ry
+            rot_flag = 1/2 * math.pi
+
+        # top right arc
+        c1 = (self.x + self.rect_width[0] - self.rx[0] - self.ry[0],
+                self.y + self.rect_width[1] - self.rx[1] - self.ry[1])
+        msp.add_ellipse(center= c1, major_axis= major_axis, ratio= ratio,
+                        start_param= 0 - rot_flag, end_param= 1/2 * math.pi - rot_flag)
+
+        # bottom right arc
+        c2 = (self.x + self.rect_width[0] + self.rect_height[0] - self.rx[0] + self.ry[0],
+                self.y + self.rect_width[1] + self.rect_height[1] - self.rx[1] + self.ry[1])
+        msp.add_ellipse(center=c2, major_axis=major_axis, ratio=ratio,
+                        start_param=3 / 2 * math.pi - rot_flag, end_param= 2 * math.pi - rot_flag)
+
+        # bottem left arc
+        c3 = (self.x + self.rect_height[0] + self.rx[0] + self.ry[0],
+                self.y + self.rect_height[1] + self.rx[1] + self.ry[1])
+        msp.add_ellipse(center=c3, major_axis=major_axis, ratio=ratio,
+                        start_param=math.pi - rot_flag, end_param=3 / 2 * math.pi - rot_flag)
+
+        # top left arc
+        c4 = (self.x + self.rx[0] - self.ry[0],
+                self.y + self.rx[1] - self.ry[1])
+        msp.add_ellipse(center=c4, major_axis=major_axis, ratio=ratio,
+                        start_param=1/2 * math.pi - rot_flag, end_param= math.pi - rot_flag)
+        """
+        rx = self.rx
+        ry = self.ry
         # define corner points
         p1 = rotate_clockwise_around_svg_origin(self.x + rx, self.y, self.rot_angle,
                                                 height)  # top left vertice, after arc
@@ -129,17 +162,5 @@ class Rectangle:
         top_left_ellipse = SvgEllipse(top_left_ellipse_element, height)
         c4 = Ellipse(top_left_ellipse, 1 / 2 * math.pi, math.pi)
         c4.draw_dxf_ellipse(msp)
+        """
 
-
-def ensure_applicable_radius(r, length):
-    """
-    Ensures that the radius of the curves are applicable.
-    The radius (in both directions) should only be as long as the half of the length (x radius) or height (y radius).
-    :param r: radius of the corner
-    :param length: length of the corresponding direction of the rectangle
-    :return: r if radius is good, or length / 2 if radius was chosen to big
-    """
-    if r <= length / 2:
-        return r
-    else:
-        return length / 2
