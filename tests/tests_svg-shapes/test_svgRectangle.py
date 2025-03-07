@@ -83,7 +83,7 @@ class TestSvgRectangle(unittest.TestCase):
         self.normal_rect_element['transform'] = 'translate(-20, 60)'
         translated_rect = SvgRectangle(self.normal_rect_element, self.height)
         self.assertEqual(translated_rect.x, 30)
-        self.assertEqual(translated_rect.y, 160)
+        self.assertEqual(translated_rect.y, 40)
 
         transformation_element = {'x':2, 'y':2, 'width':6, 'height':3, 'transform':'rotate(32)', 'rx':2, 'ry':1}
         transformation_height = 15

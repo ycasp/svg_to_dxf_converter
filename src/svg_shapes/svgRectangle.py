@@ -52,7 +52,7 @@ class SvgRectangle:
                 case 'translate':
                     self.x = translate_coordinate(self.x, values[0])
                     if len(values) > 1:
-                        self.y = translate_coordinate(self.y, values[1])
+                        self.y = translate_coordinate(self.y, -values[1])
                 case 'rotate':
                     # rotate x,y
                     if len(values) == 1:
