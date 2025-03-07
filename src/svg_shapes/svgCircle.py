@@ -39,7 +39,7 @@ class SvgCircle:
                 case 'translate':
                     self.center_x = translate_coordinate(self.center_x, values[0])
                     if len(values) > 1:
-                        self.center_y = translate_coordinate(self.center_y, values[1])
+                        self.center_y = translate_coordinate(self.center_y, -values[1])
                 case 'rotate':
                     if len(values) == 3:
                         self.center_x, self.center_y = rotate_clockwise_around_point(self.center_x, self.center_y,
