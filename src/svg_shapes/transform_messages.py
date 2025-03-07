@@ -15,6 +15,7 @@ def export_transformations(transformation):
         transform_logger.exception(e)
         return None
     else:
-        transformations = [(t_type, list(map(float, values.split(',')))) for t_type, values in matches]
+        transformations = [(t_type, list(map(float, values.replace(', ', ',').replace(' ', ',').split(','))))
+            for t_type, values in matches]
 
         return transformations
