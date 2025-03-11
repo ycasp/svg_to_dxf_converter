@@ -33,40 +33,40 @@ class SvgPolygon:
         self.point_list = scaled_points
 
     def transform(self):
+        len_points_list = len(self.point_list)
         for t_type, values in self.transformation_list:
-            len_points_list = len(self.point_list)
             match t_type:
                 case 'translate':
                     if len(values) == 1:
                         for i in range (0, len_points_list):
                             self.point_list[i] = (translate_coordinate(self.point_list[i][0], values[0]),
-                                                  self.point_list[i][1])
+                            self.point_list[i][1])
                     elif len(values) == 2:
                         for i in range(0, len_points_list):
                             self.point_list[i] = (translate_coordinate(self.point_list[i][0], values[0]),
-                                                  translate_coordinate(self.point_list[i][1], values[1]))
+                            translate_coordinate(self.point_list[i][1], values[1]))
                     else:
                         svg_polygon_logger.warning(f"unknown translate entry in values, {len(values)}")
                 case 'rotate':
-                   if len(values) == 1:
-                       for i in range (0, len_points_list):
-                           rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1], values[0], 0, 0)
-                           self.point_list[i] = (rot_x, (-1) * rot_y)
-                   elif len(values) == 3:
-                       for i in range (0, len_points_list):
-                           rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1], values[0], values[1], -values[2])
-                           self.point_list[i] = (rot_x, (-1) * rot_y)
-                   else:
-                       svg_polygon_logger.warning(f"unknown rotate entry in values, {len(values)}")
+                    if len(values) == 1:
+                        for i in range (0, len_points_list):
+                            rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1], values[0], 0, 0)
+                            self.point_list[i] = (rot_x, (-1) * rot_y)
+                    elif len(values) == 3:
+                        for i in range (0, len_points_list):
+                            rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1], values[0], values[1], -values[2])
+                            self.point_list[i] = (rot_x, (-1) * rot_y)
+                    else:
+                        svg_polygon_logger.warning(f"unknown rotate entry in values, {len(values)}")
                 case 'scale':
                     if len(values) == 1:
                         for i in range(0, len_points_list):
                             self.point_list[i] = (scale_coordinate(self.point_list[i][0], values[0]),
-                                scale_coordinate(self.point_list[i][1], values[0]))
+                            scale_coordinate(self.point_list[i][1], values[0]))
                     elif len(values) == 2:
                         for i in range(0, len_points_list):
                             self.point_list[i] = (scale_coordinate(self.point_list[i][0], values[0]),
-                                scale_coordinate(self.point_list[i][1], values[1]))
+                            scale_coordinate(self.point_list[i][1], values[1]))
                     else:
                         svg_polygon_logger.warning(f"unknown scale entry in values, {len(values)}")
                 case 'skewX':
