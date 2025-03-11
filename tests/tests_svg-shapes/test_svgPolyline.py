@@ -15,6 +15,13 @@ class TestSvgPolyline(unittest.TestCase):
         basic_polyline = SvgPolyline(self.polyline_element, self.svg_height)
         self.assertEqual(basic_polyline.get_name(), 'polyline')
 
+    def test_scale(self):
+        scale_x = 2
+        scale_y = 0.5
+        basic_polyline = SvgPolyline(self.polyline_element, self.svg_height)
+        basic_polyline.scale(scale_x, scale_y)
+        self.assertListEqual(basic_polyline.point_list, [(200, 350), (300, 325), (400, 360), (500, 317.5), (600, 375)])
+
     def test_transformation(self):
         self.polyline_element['transform'] = 'translate(-34)'
         x_translated_polyline = SvgPolyline(self.polyline_element, self.svg_height)
