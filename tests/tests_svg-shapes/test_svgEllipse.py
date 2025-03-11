@@ -42,8 +42,8 @@ class TestSvgEllipse(unittest.TestCase):
         self.assertAlmostEqual(rot_ellipse.center_x, -65.2196, 4)
         self.assertAlmostEqual(rot_ellipse.center_y, self.svg_height - 150.4872, 4)
         self.assertAlmostEqual(rot_ellipse.radius_x[0], 24.2405, 4)
-        self.assertAlmostEqual(rot_ellipse.radius_x[1], 43.7310, 4)
-        self.assertAlmostEqual(rot_ellipse.radius_y[0], -26.2386, 4)
+        self.assertAlmostEqual(rot_ellipse.radius_x[1], -43.7310, 4)
+        self.assertAlmostEqual(rot_ellipse.radius_y[0], 26.2386, 4)
         self.assertAlmostEqual(rot_ellipse.radius_y[1], 14.5443, 4)
 
         self.normal_ellipse['transform'] = 'rotate(29, 120, 210)'
@@ -51,8 +51,8 @@ class TestSvgEllipse(unittest.TestCase):
         self.assertAlmostEqual(rot_ellipse.center_x, 141.2924, 4)
         self.assertAlmostEqual(rot_ellipse.center_y, self.svg_height - 130.3342, 4)
         self.assertAlmostEqual(rot_ellipse.radius_x[0], 43.7310, 4)
-        self.assertAlmostEqual(rot_ellipse.radius_x[1], 24.2405, 4)
-        self.assertAlmostEqual(rot_ellipse.radius_y[0], -14.5443, 4)
+        self.assertAlmostEqual(rot_ellipse.radius_x[1], -24.2405, 4)
+        self.assertAlmostEqual(rot_ellipse.radius_y[0], 14.5443, 4)
         self.assertAlmostEqual(rot_ellipse.radius_y[1], 26.2386, 4)
 
         self.normal_ellipse['transform'] = 'scale(0.6)'

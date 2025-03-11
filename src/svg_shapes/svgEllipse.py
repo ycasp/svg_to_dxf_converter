@@ -50,22 +50,18 @@ class SvgEllipse:
                         self.center_x, center_y = rotate_clockwise_around_point(self.center_x, -self.center_y,
                                                                                      values[0], 0, 0)
                         self.center_y = (-1) * center_y
-                        rx_x, rx_y = rotate_clockwise_around_point(self.radius_x[0], -self.radius_x[1],
+                        self.radius_x = rotate_clockwise_around_point(self.radius_x[0], self.radius_x[1],
                                                                       values[0], 0, 0)
-                        self.radius_x = (rx_x, (-1) * rx_y)
-                        ry_x, ry_y = rotate_clockwise_around_point(self.radius_y[0], -self.radius_y[1],
+                        self.radius_y = rotate_clockwise_around_point(self.radius_y[0], self.radius_y[1],
                                                                       values[0], 0, 0)
-                        self.radius_y = (ry_x, (-1) * ry_y)
                     elif len(values) == 3:
                         self.center_x, center_y = rotate_clockwise_around_point(self.center_x, -self.center_y,
                                                                                 values[0], values[1], -values[2])
                         self.center_y = (-1) * center_y
-                        rx_x, rx_y = rotate_clockwise_around_point(self.radius_x[0], -self.radius_x[1],
+                        self.radius_x = rotate_clockwise_around_point(self.radius_x[0], self.radius_x[1],
                                                                       values[0], 0, 0)
-                        self.radius_x = (rx_x, (-1) * rx_y)
-                        ry_x, ry_y  = rotate_clockwise_around_point(self.radius_y[0], -self.radius_y[1],
+                        self.radius_y  = rotate_clockwise_around_point(self.radius_y[0], self.radius_y[1],
                                                                       values[0], 0, 0)
-                        self.radius_y = (ry_x, (-1) * ry_y)
                     else:
                         svg_ellipse_logger.warning(f"unknown rotate entry in values, {len(values)}")
                 case 'scale':
