@@ -1,7 +1,5 @@
 import unittest
 
-from numpy.random import normal
-
 from src.svg_shapes.svgCircle import *
 
 class TestSvgCircle(unittest.TestCase):
@@ -79,11 +77,15 @@ class TestSvgCircle(unittest.TestCase):
 
         self.normal_circle['transform'] = 'scale(0.5)'
         scaled_circle = SvgCircle(self.normal_circle, self.svg_height)
+        self.assertEqual(scaled_circle.center_x, 50)
+        self.assertEqual(scaled_circle.center_y, 250)
         self.assertEqual(scaled_circle.radius, 25)
         self.assertEqual(scaled_circle.radius_y, 0)
 
         self.normal_circle['transform'] = 'scale(0.5, 3)'
         scaled_circle = SvgCircle(self.normal_circle, self.svg_height)
+        self.assertEqual(scaled_circle.center_x, 50)
+        self.assertEqual(scaled_circle.center_y, 0)
         self.assertEqual(scaled_circle.radius, 25)
         self.assertEqual(scaled_circle.radius_y, 150)
 
@@ -95,13 +97,13 @@ class TestSvgCircle(unittest.TestCase):
 
         self.normal_circle['transform'] = 'matrix(0, 1, 1, 0)'
         matrix_circle = SvgCircle(self.normal_circle, self.svg_height)
-        self.assertEqual(matrix_circle.center_x, 200)
-        self.assertEqual(matrix_circle.center_y, 100)
+        self.assertEqual(matrix_circle.center_x, 100)
+        self.assertEqual(matrix_circle.center_y, 200)
         self.assertEqual(matrix_circle.radius, 50)
 
         crazy_trafo_element = {'cx': '0', 'cy': '0', 'r': '1',
             'transform': 'rotate(90, 1, 0) translate(3, -5) matrix(0, -1, -1, 0) matrix(1, 0, 0, 1, -4, -6) scale(3)'}
-        crazy_circle = SvgCircle(crazy_trafo_element, 0)
-        self.assertEqual(crazy_circle.center_x, -10)
-        self.assertEqual(crazy_circle.center_y, 2)
+        crazy_circle = SvgCircle(crazy_trafo_element, 10)
+        self.assertEqual(crazy_circle.center_x, 6)
+        self.assertEqual(crazy_circle.center_y, 40)
         self.assertEqual(crazy_circle.radius, 3)
