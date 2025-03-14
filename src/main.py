@@ -17,23 +17,25 @@ if __name__ == "__main__":
     # /bezier curves/
     # /fruits and veggies/
     # /dohner ag/
-    filepath = "C:/Users/ycasp/Documents/Projekt Lukas/svg collection/basic geometric forms/"
-    filename = "cut_rules"
+    # /fonts/
+    filepath = "C:/Users/ycasp/Documents/Projekt Lukas/svg collection/dohner ag/"
+    filename = "Goat"
     ending = ".svg"
     try:
         # read in svg (xml) file into tree
-        svg_root = read_svg_file(filepath + filename + ending)
+        svg_figures = read_svg_file(filepath + filename + ending)
+
 
         # scale file
         # svg_root = scale_file(svg_root, 266.520, 373.335)
-        scale = 1
-        svg_root = scale_file_param(svg_root, scale, scale)
+        scale = 3
+        svg_figures = scale_file_param(svg_figures, scale, scale)
 
         # cut rules
-        enforce_cut_rules(svg_root, 2)
+        # enforce_cut_rules(svg_root, 2)
 
         # write svg content to dxf file and save it
-        write_dxf(svg_root, filename)
+        write_dxf(svg_figures, filename)
 
     except FileNotFoundError as pathErr:
         main_logger.exception(pathErr)
