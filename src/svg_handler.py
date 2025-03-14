@@ -1,11 +1,8 @@
 import xml.etree.ElementTree as ElementTree
 from xml.etree.ElementTree import ParseError
-
-from src.scaling_functions import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
 from src.svg_shapes import *
 
 svg_logger = setup_logger(__name__)
-
 
 def read_svg_file(name):
     """
@@ -139,25 +136,25 @@ def print_root(root):
         print('\n')
 
 
-def scale_file(root, new_width, new_height):
+def scale_file(svg_figures, new_width, new_height):
     """
     Scales all figures in a svg file. Changes the attributes in the tree.
 
-    :param root: tree with svg figures
+    :param svg_figures: list with svg figures
     :param new_width: new width in mm
     :param new_height: new height in mm
     :return: scaled svg content in a root
     """
 
-    old_width = get_svg_width(root)
-    old_height = get_svg_height(root)
+    old_width = svg_figures[0].get_header_width()
+    old_height = svg_figures[0].get_header_height()
 
     try:
         old_ratio = old_height / old_width
         new_ratio = new_height / new_width
     except ZeroDivisionError as e:
         svg_logger.exception(e)
-        return root
+        return svg_figures
     else:
         if old_ratio != new_ratio:
             svg_logger.warning(f"format of file is changed badly - new ratio: {new_ratio} != old ratio: {old_ratio}")
@@ -167,31 +164,14 @@ def scale_file(root, new_width, new_height):
     scale_y = new_height / old_height
 
     # set new width and height
-    root.set('width', str(new_width) + 'mm')
-    root.set('height', str(new_height) + 'mm')
-    root.set('viewBox', '0 0 ' + str(new_width) + ' ' + str(new_height))
+    svg_figures[0].set_header_width(new_width)
+    svg_figures[0].set_header_height(new_height)
 
     # iterate through svg content
-    for element in root.iter():
-        match element.tag:
-            case '{http://www.w3.org/2000/svg}circle':
-                scale_circle(element, scale_x, scale_y)
-                # cut rules
-            case '{http://www.w3.org/2000/svg}ellipse':
-                scale_ellipse(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}rect':
-                scale_rectangle(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}line':
-                scale_line(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}polygon':
-                scale_polygon(element, scale_x, scale_y)
-            case '{http://www.w3.org/2000/svg}path':
-                scale_path(element, scale_x, scale_y)
-            case _:
-                pass  # TODO proper error handling
+    for figure in svg_figures:
+        figure.scale(scale_x, scale_y)
 
-    return root
-
+    return svg_figures
 
 def scale_file_param(svg_figures, scale_x, scale_y):
     """
@@ -204,10 +184,6 @@ def scale_file_param(svg_figures, scale_x, scale_y):
     """
 
     # here no error handling, as we have no (possible) division by zero
-
-    # calculate scaling in x/y-direction
-    new_width = scale_x * svg_figures[0].get_header_width()
-    new_height = scale_y * svg_figures[0].get_header_height()
 
     # set new width and height
     for figures in svg_figures:
