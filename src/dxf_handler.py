@@ -55,7 +55,7 @@ def write_dxf(svg_figures, filename):
             case 'path':
                 # print('path:', element.tag, element.attrib)
                 path = Path(figure)
-                path.draw_svg_path(msp, svg_height)
+                path.draw_svg_path(msp)
             case _:
                 # print('nothing:', element.tag, element.attrib)
                 dxf_logger.info(f"svg_element without matching figure tag: {figure.get_name()}")
