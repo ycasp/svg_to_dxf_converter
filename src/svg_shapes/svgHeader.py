@@ -30,6 +30,12 @@ class SvgHeader:
     def get_header_height(self):
         return self.height
 
+    def set_header_width(self, width):
+        self.width = width
+
+    def set_header_height(self, height):
+        self.height = height
+
     def scale(self, scale_x, scale_y):
         self.width = self.width * scale_x
         self.height = self.height * scale_y
