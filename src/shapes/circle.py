@@ -8,6 +8,10 @@ class Circle:
     """
 
     def __init__(self, svg_circle):
+        """
+        Converts an SvgCircle into a "dxf"-circle, ready to be written in dxf-file.
+        :param svg_circle: SvgCircle, which is transformed into dxf
+        """
         self.center = (svg_circle.center_x, svg_circle.center_y)
         self.radius = svg_circle.radius
 

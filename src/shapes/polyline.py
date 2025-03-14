@@ -11,9 +11,9 @@ class Polyline:
         Initializes the polyline object.
         Already changes the svg-coordinates to cartesian coordinates.
 
-        :param points: string of points form svg file
-        :param height: height of the svg file to change coordinates
+        :param svg_polyline: SvgPolyline, to be transformed in to dxf, already transformed and changed into cartesian coordinates
         """
+        # extract the point_list from SvgPolyline
         self.points_list = svg_polyline.point_list
 
     def draw_dxf_polyline(self, msp):
@@ -23,4 +23,5 @@ class Polyline:
         :param msp: Modelspace of dxf file
         :return: -
         """
+        # add the lines to model space, only closed if last point = first point, but this is done manually - thus close = False
         msp.add_lwpolyline(self.points_list, close=False)

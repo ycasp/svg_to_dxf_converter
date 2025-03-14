@@ -16,8 +16,13 @@ class Rectangle:
         rot_angle (float): rotation angle of the rectangle (in degree) given in the transformation message (default value 0)
     """
 
-    def __init__(self, svg_rectangle, rot_angle=0):
+    def __init__(self, svg_rectangle):
+        """
+        Initialize a rectangle, which is ready to be written into dxf file.
 
+        :param svg_rectangle: SvgRectangle, to be written into dxf file, already transformed and changed to dxf coordinates
+        """
+        # extract values from SvgRectangle
         self.x = svg_rectangle.x
         self.y = svg_rectangle.y
         self.rect_width = svg_rectangle.rect_width
@@ -25,17 +30,30 @@ class Rectangle:
         self.rx = svg_rectangle.rx
         self.ry = svg_rectangle.ry
 
-    # draws a rectangle form the given svg data (from a rect attribute) into a dxf modelspace
-    def draw_dxf_rect(self, msp, height):
+    def draw_dxf_rect(self, msp):
+        """
+        Draws a rectangle form the given svg data (from a rect attribute) into a dxf modelspace
+        :param msp: dxf model space, where the figures are written into
+        :return: -
+        """
+        # determine if corners are rounded or not
         if self.rx == (0, 0) and self.ry == (0, 0):
+            # calculate the vertices of the rectangle
             vertices = [(self.x, self.y), (self.x + self.rect_width[0], self.y + self.rect_width[1]),
                 (self.x + self.rect_width[0] + self.rect_height[0], self.y + self.rect_width[1] + self.rect_height[1]),
                 (self.x + self.rect_height[0], self.y + self.rect_height[1])]
+            # add it to the modelspace and close the figure
             msp.add_lwpolyline(vertices, close=True)
         else:
-            self.draw_rounded_rectangle(msp, height)
+            # if corners are rounded, add it with rounded corners (= quarter elliptic arcs)
+            self.draw_rounded_rectangle(msp)
 
-    def draw_rounded_rectangle(self, msp, height):
+    def draw_rounded_rectangle(self, msp):
+        """
+        Draws a rectangle with rounded corners into the model space.
+        :param msp: dxf modelspace, where the figures are written into
+        :return: -
+        """
         # define corner points
         # top left vertice, after arc
         p1 = (self.x + self.rx[0],
@@ -71,7 +89,7 @@ class Rectangle:
         # add rounded corners
         rot_flag = 0
 
-        # determine major axis
+        # determine major axis and ratio
         norm_rx = calculate_euclidean_norm(self.rx)
         norm_ry = calculate_euclidean_norm(self.ry)
 
@@ -81,6 +99,7 @@ class Rectangle:
         else:
             major_axis = self.ry
             ratio = norm_rx / norm_ry
+            # if y is mayor axis, rotate back by 1/2*pi, as 0*pi == y-axis (not as always x-axis)
             rot_flag = 1 / 2 * math.pi
 
         # top right arc
@@ -106,57 +125,3 @@ class Rectangle:
         self.y + self.rx[1] - self.ry[1])
         msp.add_ellipse(center=c4, major_axis=major_axis, ratio=ratio,
                         start_param=1 / 2 * math.pi - rot_flag, end_param=math.pi - rot_flag)
-        """
-        rx = self.rx
-        ry = self.ry
-        # define corner points
-        p1 = rotate_clockwise_around_svg_origin(self.x + rx, self.y, self.rot_angle,
-                                                height)  # top left vertice, after arc
-        p2 = rotate_clockwise_around_svg_origin(self.x + self.width - rx, self.y, self.rot_angle,
-                                                height)  # top right vertice, before arc, rotation included
-        p3 = rotate_clockwise_around_svg_origin(self.x + self.width, self.y - ry, self.rot_angle,
-                                                height)  # top right vertice, after arc, rotation included
-        p4 = rotate_clockwise_around_svg_origin(self.x + self.width, self.y + self.rect_height + ry, self.rot_angle,
-                                                height)  # bottom right vertice, before arc, rotation included
-        p5 = rotate_clockwise_around_svg_origin(self.x + self.width - rx, self.y + self.rect_height, self.rot_angle,
-                                                height)  # bottom right vertice, after arc, rotation included
-        p6 = rotate_clockwise_around_svg_origin(self.x + rx, self.y + self.rect_height, self.rot_angle,
-                                                height)  # bottom left vertice, before arc, rotation included
-        p7 = rotate_clockwise_around_svg_origin(self.x, self.y + self.rect_height + ry, self.rot_angle,
-                                                height)  # bottom left vertice, after arc, rotation included
-        p8 = rotate_clockwise_around_svg_origin(self.x, self.y - ry, self.rot_angle,
-                                                height)  # top left vertice, before arc, rotation included
-
-        # add edges
-        msp.add_line(p1, p2)  # top edge
-        msp.add_line(p3, p4)  # right edge
-        msp.add_line(p5, p6)  # bottom ege
-        msp.add_line(p7, p8)  # left edge
-
-        # add arcs / ellipses
-        # top right corner
-        top_right_ellipse_element = {'cx':self.x + self.width - rx, 'cy':(self.y - ry - height) * (-1), 'rx':rx, 'ry':ry,
-        'transform': f"rotate({self.rot_angle})"}
-        top_right_ellipse = SvgEllipse(top_right_ellipse_element, height)
-        c1 = Ellipse(top_right_ellipse, 0, 1 / 2 * math.pi)
-        c1.draw_dxf_ellipse(msp)
-
-        # bottom right corner
-        bottom_right_ellipse_element = {'cx':self.x + self.width - rx, 'cy':(self.y + self.rect_height + ry - height) * (-1), 'rx':rx, 'ry':ry,
-        'transform': f"rotate({self.rot_angle})"}
-        bottom_right_ellipse = SvgEllipse(bottom_right_ellipse_element, height)
-        c2 = Ellipse(bottom_right_ellipse, 3 / 2 * math.pi, 2 * math.pi)
-        c2.draw_dxf_ellipse(msp)
-        # bottom left corner
-        bottom_left_ellipse_element = {'cx':self.x + rx, 'cy':(self.y + self.rect_height + ry - height) * (-1), 'rx':rx, 'ry':ry,
-        'transform': f"rotate({self.rot_angle})"}
-        bottom_right_ellipse = SvgEllipse(bottom_left_ellipse_element, height)
-        c3 = Ellipse(bottom_right_ellipse, math.pi, 3 / 2 * math.pi)
-        c3.draw_dxf_ellipse(msp)
-        # top left corner
-        top_left_ellipse_element = {'cx': self.x + rx, 'cy': (self.y - ry - height) * (-1), 'rx': rx, 'ry': ry,
-            'transform': f"rotate({self.rot_angle})"}
-        top_left_ellipse = SvgEllipse(top_left_ellipse_element, height)
-        c4 = Ellipse(top_left_ellipse, 1 / 2 * math.pi, math.pi)
-        c4.draw_dxf_ellipse(msp)
-        """

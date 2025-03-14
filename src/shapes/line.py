@@ -11,12 +11,10 @@ class Line:
         """
         Initializes the line object.
 
-        :param x1: x-coordinate of start point
-        :param y1: y-coordinate (in svg format) of start point
-        :param x2: x-coordinate of end point
-        :param y2: y-coordinate (in svg format) of end point
-        :param height: height of svg format, used to convert y-coordinates in to cartesian form
+        :param svg_line: SvgLine, line to be transformed to dxf, already transformed and
+                         changed to cartesian coordinates
         """
+        # extract start-, and end-point form SvgLine
         self.start = (svg_line.x1, svg_line.y1)
         self.end = (svg_line.x2, svg_line.y2)
 
