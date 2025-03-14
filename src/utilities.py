@@ -19,6 +19,8 @@ def change_svg_to_dxf_coordinate(y, height):
     """
     return (-1) * y + height
 
+def change_dxf_to_svg_coordinate(y, height):
+    return (y - height) * (-1)
 
 # get values of transformation messages
 
@@ -144,9 +146,28 @@ def translate_coordinate(cord, translation):
 def scale_coordinate(cord, scaling_factor):
     return cord * scaling_factor
 
+def scale_coordinate_svg(cord, scaling_factor, svg_height):
+    return (cord - svg_height) * scaling_factor + svg_height
+
 def matrix_transformation(x, y, matrix_list):
     return (x * matrix_list[0] + y * matrix_list[2] + matrix_list[4],
     x * matrix_list[1] + y * matrix_list[3] + matrix_list[5])
+
+def skew_x(x, y, deg):
+    rad = math.radians(deg)
+    return x + y * math.tan(rad)
+
+def skew_x_for_changed_point(x, y, deg, svg_height):
+    rad = math.radians(deg)
+    return x - y * math.tan(rad) + svg_height * math.tan(rad)
+
+def skew_y(x, y, deg):
+    rad = math.radians(deg)
+    return y + x * math.tan(rad)
+
+def skew_y_for_changed_point(x, y, deg):
+    rad = math.radians(deg)
+    return y - x * math.tan(rad)
 
 
 def calculate_angle_between_vectors_in_rad(x_vec, y_vec, large_angle):
