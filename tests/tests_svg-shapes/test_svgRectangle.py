@@ -130,9 +130,7 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertEqual(skew_x_rect.rect_width, (6, 0))
         self.assertAlmostEqual(skew_x_rect.rect_height[0], 2.02353, 5)
         self.assertEqual(skew_x_rect.rect_height[1], -3)
-        """self.assertEqual(skew_x_rect.rx, (2,0))
-        self.assertAlmostEqual(skew_x_rect.ry[0], 0.67451, 5)
-        self.assertEqual(skew_x_rect.ry[1], 1)"""
+
 
         transformation_element['transform'] = "skewY(-26)"
         skew_y_rect = SvgRectangle(transformation_element, transformation_height)
@@ -141,9 +139,14 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertEqual(skew_y_rect.rect_width[0], 6)
         self.assertAlmostEqual(skew_y_rect.rect_width[1], 2.926396, 6)
         self.assertEqual(skew_y_rect.rect_height, (0, -3))
-        """self.assertEqual(skew_y_rect.rx[0], 2)
-        self.assertAlmostEqual(skew_y_rect.rx[1], -0.97547, 5)
-        self.assertEqual(skew_y_rect.ry, (0, 1))"""
+
+        transformation_element['transform'] = "skewY(25)"
+        skew_y_rect = SvgRectangle(transformation_element, transformation_height)
+        self.assertEqual(skew_y_rect.x, 2)
+        self.assertAlmostEqual(skew_y_rect.y, 15 - 2.9326, 4)
+        self.assertEqual(skew_y_rect.rect_width[0], 6)
+        self.assertAlmostEqual(skew_y_rect.rect_width[1], -2.7978, 4)
+        self.assertEqual(skew_y_rect.rect_height, (0, -3))
 
         matrix_trafo_element = {'x': 10, 'y': 10, 'width': 30, 'height': 20, 'transform': "matrix(3 1 -1 3 30 40)",
             'rx': 10, 'ry': 5}
@@ -152,5 +155,3 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertEqual(matrix_trafo_rect.y, 120)
         self.assertEqual(matrix_trafo_rect.rect_width, (90, -30))
         self.assertEqual(matrix_trafo_rect.rect_height, (-20, -60))
-        """ self.assertEqual(matrix_trafo_rect.rx, (30, 10))
-        self.assertEqual(matrix_trafo_rect.ry, (-5, 15))"""
