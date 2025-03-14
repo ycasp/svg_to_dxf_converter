@@ -1,9 +1,10 @@
+from src.logging_config import setup_logger
 from src.svg_shapes.transform_messages import export_transformations
 from src.utilities import change_svg_to_dxf_coordinate, rotate_clockwise_around_point, \
     translate_coordinate, scale_coordinate, matrix_transformation
-from src.logging_config import setup_logger
 
 svg_circle_logger = setup_logger('svg_circle')
+
 
 class SvgCircle:
 
@@ -48,11 +49,11 @@ class SvgCircle:
                 case 'rotate':
                     if len(values) == 3:
                         self.center_x, center_y = rotate_clockwise_around_point(self.center_x, -self.center_y,
-                                                    values[0], values[1], -values[2])
+                                                                                values[0], values[1], -values[2])
                         self.center_y = center_y * (-1)
                     elif len(values) == 1:
                         self.center_x, center_y = rotate_clockwise_around_point(self.center_x, -self.center_y,
-                                                                                     values[0], 0, 0)
+                                                                                values[0], 0, 0)
                         self.center_y = (-1) * center_y
                     else:
                         svg_circle_logger.warning(f"unknown rotation message, value length: {len(values)}")

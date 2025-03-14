@@ -2,10 +2,11 @@ import unittest
 
 from src.svg_shapes.svgLine import *
 
+
 class TestSvgLine(unittest.TestCase):
     def setUp(self):
         self.svg_height = 600
-        self.line_element = {'x1':"50",  'y1':"50",  'x2':"150",  'y2':"30"}
+        self.line_element = {'x1': "50", 'y1': "50", 'x2': "150", 'y2': "30"}
 
     def test_initialisation(self):
         line = SvgLine(self.line_element, self.svg_height)
@@ -48,9 +49,9 @@ class TestSvgLine(unittest.TestCase):
         self.line_element['transform'] = "rotate(42)"
         rotated_line = SvgLine(self.line_element, self.svg_height)
         self.assertAlmostEqual(rotated_line.x1, 3.70071, 5)
-        self.assertAlmostEqual(rotated_line.y1, 600-70.61377, 5)
+        self.assertAlmostEqual(rotated_line.y1, 600 - 70.61377, 5)
         self.assertAlmostEqual(rotated_line.x2, 91.39781, 5)
-        self.assertAlmostEqual(rotated_line.y2, 600-122.66394, 5)
+        self.assertAlmostEqual(rotated_line.y2, 600 - 122.66394, 5)
 
         self.line_element['transform'] = "rotate(42, 100, 250)"
         rotated_line = SvgLine(self.line_element, self.svg_height)
@@ -93,6 +94,3 @@ class TestSvgLine(unittest.TestCase):
         self.assertEqual(matrix_line.y1, 535)
         self.assertEqual(matrix_line.x2, 501)
         self.assertEqual(matrix_line.y2, 493)
-
-
-

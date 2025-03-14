@@ -2,6 +2,7 @@ import unittest
 
 from src.svg_shapes.svgHeader import *
 
+
 class TestSvgHeader(unittest.TestCase):
 
     def setUp(self):
@@ -24,7 +25,6 @@ class TestSvgHeader(unittest.TestCase):
         self.assertEqual(empty_header.width, 200)
         self.assertEqual(empty_header.view_box, [0, 0, 200, 200])
 
-
     def test_getters(self):
         header_px = SvgHeader(self.px_element)
 
@@ -35,12 +35,12 @@ class TestSvgHeader(unittest.TestCase):
     def test_extract_attributes(self):
         self.assertEqual(extract_view_box('0 0 250 500'), [0, 0, 250, 500])
 
-        with self.assertLogs("src.svg_shapes.svgHeader", level = "INFO") as log:
+        with self.assertLogs("src.svg_shapes.svgHeader", level="INFO") as log:
             width = extract_header_width('800cm')
         self.assertEqual(width, 0)
         self.assertIn("unknown width unit: 800cm", log.output[0])
 
-        with self.assertLogs("src.svg_shapes.svgHeader", level = "INFO") as log:
+        with self.assertLogs("src.svg_shapes.svgHeader", level="INFO") as log:
             height = extract_header_height('300m')
         self.assertEqual(height, 0)
         self.assertIn("unknown height unit: 300m", log.output[0])

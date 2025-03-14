@@ -1,5 +1,6 @@
 import ezdxf
 
+from logging_config import setup_logger
 from src.shapes.circle import Circle
 from src.shapes.ellipse import Ellipse
 from src.shapes.line import Line
@@ -7,11 +8,9 @@ from src.shapes.path import Path
 from src.shapes.polygon import Polygon
 from src.shapes.polyline import Polyline
 from src.shapes.rectangle import Rectangle
-from src.svg_handler import get_svg_height
-
-from logging_config import setup_logger
 
 dxf_logger = setup_logger(__name__)
+
 
 def write_dxf(svg_figures, filename):
     """

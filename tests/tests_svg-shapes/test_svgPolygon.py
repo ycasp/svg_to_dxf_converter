@@ -2,10 +2,11 @@ import unittest
 
 from src.svg_shapes.svgPolygon import *
 
+
 class TestSvgPolygon(unittest.TestCase):
     def setUp(self):
         self.svg_height = 800
-        self.polygon_element = {'points':"80,50 150,130 50,150"}
+        self.polygon_element = {'points': "80,50 150,130 50,150"}
 
     def test_initialization(self):
         polygon = SvgPolygon(self.polygon_element, self.svg_height)
@@ -23,7 +24,7 @@ class TestSvgPolygon(unittest.TestCase):
         self.assertListEqual(polygon.point_list, [(40, 1500), (75, 1340), (25, 1300)])
 
     def test_transformation(self):
-        self.polygon_element['transform']  = 'translate(-33)'
+        self.polygon_element['transform'] = 'translate(-33)'
         x_translated_polygon = SvgPolygon(self.polygon_element, self.svg_height)
         self.assertListEqual(x_translated_polygon.point_list, [(47, 750), (117, 670), (17, 650)])
 
@@ -35,7 +36,7 @@ class TestSvgPolygon(unittest.TestCase):
         rotated_polygon = SvgPolygon(self.polygon_element, self.svg_height)
         rotated_points = [(-66.70205, self.svg_height + 66.71459), (-116.91187, self.svg_height + 160.41077),
             (-14.97585, self.svg_height + 157.40306)]
-        for i in range (0, 3):
+        for i in range(0, 3):
             self.assertAlmostEqual(rotated_polygon.point_list[i][0], rotated_points[i][0], 5)
             self.assertAlmostEqual(rotated_polygon.point_list[i][1], rotated_points[i][1], 5)
 
@@ -49,7 +50,7 @@ class TestSvgPolygon(unittest.TestCase):
 
         self.polygon_element['transform'] = 'scale(0.2)'
         scaled_polygon = SvgPolygon(self.polygon_element, self.svg_height)
-        self.assertListEqual(scaled_polygon.point_list, [(16, 790), (30, 774), (10,770)])
+        self.assertListEqual(scaled_polygon.point_list, [(16, 790), (30, 774), (10, 770)])
 
         self.polygon_element['transform'] = 'scale(5, 2)'
         scaled_polygon = SvgPolygon(self.polygon_element, self.svg_height)
@@ -64,7 +65,8 @@ class TestSvgPolygon(unittest.TestCase):
 
         self.polygon_element['transform'] = 'skewY(11)'
         skew_y_polygon = SvgPolygon(self.polygon_element, self.svg_height)
-        skew_y_points = [(80, self.svg_height - 65.55042), (150, self.svg_height - 159.15705), (50, self.svg_height - 159.71902)]
+        skew_y_points = [(80, self.svg_height - 65.55042), (150, self.svg_height - 159.15705),
+            (50, self.svg_height - 159.71902)]
         for i in range(0, 3):
             self.assertAlmostEqual(skew_y_polygon.point_list[i][0], skew_y_points[i][0], 5)
             self.assertAlmostEqual(skew_y_polygon.point_list[i][1], skew_y_points[i][1], 5)

@@ -1,10 +1,10 @@
 import unittest
-
+from unittest.mock import Mock
 
 from src.shapes.polygon import Polygon
-from src.svg_shapes import SvgPolyline, SvgPolygon
+from src.svg_shapes import SvgPolygon
 from src.utilities import change_svg_to_dxf_coordinate
-from unittest.mock import Mock
+
 
 class TestPolygon(unittest.TestCase):
     def setUp(self):
@@ -18,11 +18,11 @@ class TestPolygon(unittest.TestCase):
 
     def test_initialization(self):
         manual_points = [(0, change_svg_to_dxf_coordinate(0, self.svg_height)),
-                         (10, change_svg_to_dxf_coordinate(10, self.svg_height)),
-                         (20, change_svg_to_dxf_coordinate(40, self.svg_height)),
-                         (20, change_svg_to_dxf_coordinate(-40, self.svg_height)),
-                         (10, change_svg_to_dxf_coordinate(-10, self.svg_height)),
-                         (0, change_svg_to_dxf_coordinate(0, self.svg_height))]
+            (10, change_svg_to_dxf_coordinate(10, self.svg_height)),
+            (20, change_svg_to_dxf_coordinate(40, self.svg_height)),
+            (20, change_svg_to_dxf_coordinate(-40, self.svg_height)),
+            (10, change_svg_to_dxf_coordinate(-10, self.svg_height)),
+            (0, change_svg_to_dxf_coordinate(0, self.svg_height))]
 
         polygon = Polygon(self.svg_polygon)
 
@@ -33,7 +33,6 @@ class TestPolygon(unittest.TestCase):
 
         self.assertEqual(empty_polygon.points_list, [])
 
-
     def test_draw_dxf_polygon(self):
         polygon = Polygon(self.svg_polygon)
 
@@ -41,7 +40,7 @@ class TestPolygon(unittest.TestCase):
 
         polygon.draw_dxf_polygon(mock_msp)
 
-        mock_msp.add_lwpolyline.assert_called_once_with(polygon.points_list, close = True)
+        mock_msp.add_lwpolyline.assert_called_once_with(polygon.points_list, close=True)
 
 
 if __name__ == "__main__":

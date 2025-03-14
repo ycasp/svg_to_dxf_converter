@@ -7,6 +7,7 @@ from src.logging_config import setup_logger
 
 utilities_logger = setup_logger(__name__)
 
+
 # svg transformation functions
 
 def change_svg_to_dxf_coordinate(y, height):
@@ -19,8 +20,10 @@ def change_svg_to_dxf_coordinate(y, height):
     """
     return (-1) * y + height
 
+
 def change_dxf_to_svg_coordinate(y, height):
     return (y - height) * (-1)
+
 
 # get values of transformation messages
 
@@ -45,6 +48,7 @@ def export_rotation(transformation):
             return angle, cx, cy
         return None  # Default values if no rotation is found
 
+
 def export_translation(transformation):
     try:
         match = re.search(r'translate\(([-\d.e]+),\s*([-\d.e]+)\)', transformation)
@@ -54,9 +58,10 @@ def export_translation(transformation):
     else:
         if match:
             dx = float(match.group(1))
-            dy = float(match.group(2)) # if no translation in y-direction is given
+            dy = float(match.group(2))  # if no translation in y-direction is given
             return dx, dy
         return None
+
 
 def export_scale(transformation):
     try:
@@ -71,6 +76,7 @@ def export_scale(transformation):
             return sx, sy
         return None
 
+
 def export_skew_x(transformation):
     try:
         match = re.search(r'skewX\(([-\d.e]+)\)', transformation)
@@ -81,6 +87,7 @@ def export_skew_x(transformation):
         if match:
             return float(match.group(1))
         return None
+
 
 def export_skew_y(transformation):
     try:
@@ -93,10 +100,11 @@ def export_skew_y(transformation):
             return float(match.group(1))
         return None
 
+
 def export_matrix(transformation):
     try:
         match = re.search(r'matrix\(([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+),\s*([-\d.e]+)\)',
-                      transformation)
+                          transformation)
     except TypeError as e:
         utilities_logger.exception(e)
         return None
@@ -104,6 +112,7 @@ def export_matrix(transformation):
         if match:
             return tuple(float(match.group(i)) for i in range(1, 7))
         return None  # Return None if no matrix transformation is found
+
 
 # geometric functions
 
@@ -121,12 +130,14 @@ def rotate_clockwise_around_svg_origin(x, y, rot_angle, height):
     return (round(x * np.cos(rot_angle_rad) + (y - height) * np.sin(rot_angle_rad), 5),
     round(height - x * np.sin(rot_angle_rad) + (y - height) * np.cos(rot_angle_rad), 5))
 
+
 def rotate_clockwise_around_cartesian_origin(x, y, rot_angle):
     # TODO description + testing
     rot_angle_rad = math.radians(rot_angle)
 
     return (round(x * np.cos(rot_angle_rad) + y * np.sin(rot_angle_rad), 5),
     round(- x * np.sin(rot_angle_rad) + y * np.cos(rot_angle_rad), 5))
+
 
 def rotate_counterclockwise_around_cartesian_origin(x, y, rot_angle):
     # TODO description + testing
@@ -135,35 +146,44 @@ def rotate_counterclockwise_around_cartesian_origin(x, y, rot_angle):
     return (round(x * np.cos(rot_angle_rad) - y * np.sin(rot_angle_rad), 5),
     round(x * np.sin(rot_angle_rad) + y * np.cos(rot_angle_rad), 5))
 
+
 def rotate_clockwise_around_point(x, y, rot_angle, rot_x, rot_y):
     rot_angle_rad = math.radians(rot_angle)
     return (round(rot_x + (x - rot_x) * math.cos(rot_angle_rad) + (y - rot_y) * math.sin(rot_angle_rad), 5),
     round(rot_y - (x - rot_x) * math.sin(rot_angle_rad) + (y - rot_y) * math.cos(rot_angle_rad), 5))
 
+
 def translate_coordinate(cord, translation):
     return cord + translation
+
 
 def scale_coordinate(cord, scaling_factor):
     return cord * scaling_factor
 
+
 def scale_coordinate_svg(cord, scaling_factor, svg_height):
     return (cord - svg_height) * scaling_factor + svg_height
+
 
 def matrix_transformation(x, y, matrix_list):
     return (x * matrix_list[0] + y * matrix_list[2] + matrix_list[4],
     x * matrix_list[1] + y * matrix_list[3] + matrix_list[5])
 
+
 def skew_x(x, y, deg):
     rad = math.radians(deg)
     return x + y * math.tan(rad)
+
 
 def skew_x_for_changed_point(x, y, deg, svg_height):
     rad = math.radians(deg)
     return x - y * math.tan(rad) + svg_height * math.tan(rad)
 
+
 def skew_y(x, y, deg):
     rad = math.radians(deg)
     return y + x * math.tan(rad)
+
 
 def skew_y_for_changed_point(x, y, deg):
     rad = math.radians(deg)

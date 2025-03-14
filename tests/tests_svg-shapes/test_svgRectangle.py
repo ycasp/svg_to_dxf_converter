@@ -2,6 +2,7 @@ import unittest
 
 from src.svg_shapes.svgRectangle import *
 
+
 class TestSvgRectangle(unittest.TestCase):
 
     def setUp(self):
@@ -20,7 +21,7 @@ class TestSvgRectangle(unittest.TestCase):
         self.normal_rect_element['rx'] = 50
         self.normal_rect = SvgRectangle(self.normal_rect_element, self.height)
         self.assertEqual(self.normal_rect.rx, (50, 0))
-        self.assertEqual(self.normal_rect.ry, (0,25))
+        self.assertEqual(self.normal_rect.ry, (0, 25))
 
         self.normal_rect_element['ry'] = 15
         self.normal_rect = SvgRectangle(self.normal_rect_element, self.height)
@@ -46,7 +47,7 @@ class TestSvgRectangle(unittest.TestCase):
     def test_scale(self):
         self.normal_rect_element['rx'] = 25
         self.normal_rect_element['ry'] = 15
-        self.normal_rect= SvgRectangle(self.normal_rect_element, self.height)
+        self.normal_rect = SvgRectangle(self.normal_rect_element, self.height)
 
         scale = 2
         self.normal_rect.scale(scale, scale)
@@ -76,7 +77,7 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertEqual(translated_rect.x, 70)
         self.assertEqual(translated_rect.y, 100)
         self.assertEqual(translated_rect.rect_width, (100, 0))
-        self.assertEqual(translated_rect.rect_height, (0,-50))
+        self.assertEqual(translated_rect.rect_height, (0, -50))
         self.assertEqual(translated_rect.rx, (0, 0))
         self.assertEqual(translated_rect.ry, (0, 0))
 
@@ -85,7 +86,7 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertEqual(translated_rect.x, 30)
         self.assertEqual(translated_rect.y, 40)
 
-        transformation_element = {'x':2, 'y':2, 'width':6, 'height':3, 'transform':'rotate(32)', 'rx':2, 'ry':1}
+        transformation_element = {'x': 2, 'y': 2, 'width': 6, 'height': 3, 'transform': 'rotate(32)', 'rx': 2, 'ry': 1}
         transformation_height = 15
         rotated_rect = SvgRectangle(transformation_element, transformation_height)
         self.assertEqual(rotated_rect.x, 0.63626)
@@ -94,7 +95,6 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertEqual(rotated_rect.rect_height, (-1.58976, -2.54414))
         self.assertEqual(rotated_rect.rx, (1.69610, -1.05984))
         self.assertEqual(rotated_rect.ry, (0.52992, 0.84805))
-
 
         transformation_element['transform'] = 'scale(0.5)'
         scaled_rect = SvgRectangle(transformation_element, transformation_height)
@@ -145,7 +145,8 @@ class TestSvgRectangle(unittest.TestCase):
         self.assertAlmostEqual(skew_y_rect.rx[1], -0.97547, 5)
         self.assertEqual(skew_y_rect.ry, (0, 1))"""
 
-        matrix_trafo_element = {'x': 10, 'y': 10, 'width': 30, 'height': 20, 'transform':"matrix(3 1 -1 3 30 40)", 'rx':10, 'ry':5}
+        matrix_trafo_element = {'x': 10, 'y': 10, 'width': 30, 'height': 20, 'transform': "matrix(3 1 -1 3 30 40)",
+            'rx': 10, 'ry': 5}
         matrix_trafo_rect = SvgRectangle(matrix_trafo_element, self.height)
         self.assertEqual(matrix_trafo_rect.x, 50)
         self.assertEqual(matrix_trafo_rect.y, 120)

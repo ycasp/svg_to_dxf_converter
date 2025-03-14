@@ -1,9 +1,10 @@
+from src.logging_config import setup_logger
 from src.svg_shapes import export_transformations
 from src.utilities import change_svg_to_dxf_coordinate, rotate_clockwise_around_point, \
     translate_coordinate, scale_coordinate
-from src.logging_config import setup_logger
 
 svg_ellipse_logger = setup_logger(__name__)
+
 
 class SvgEllipse:
 
@@ -22,8 +23,6 @@ class SvgEllipse:
             self.transform()
 
         self.center_y = change_svg_to_dxf_coordinate(self.center_y, svg_height)
-
-
 
     def get_name(self):
         return self.name
@@ -48,7 +47,7 @@ class SvgEllipse:
                 case 'rotate':
                     if len(values) == 1:
                         self.center_x, center_y = rotate_clockwise_around_point(self.center_x, -self.center_y,
-                                                                                     values[0], 0, 0)
+                                                                                values[0], 0, 0)
                         self.center_y = (-1) * center_y
                         self.radius_x = rotate_clockwise_around_point(self.radius_x[0], self.radius_x[1],
                                                                       values[0], 0, 0)
@@ -60,7 +59,7 @@ class SvgEllipse:
                         self.center_y = (-1) * center_y
                         self.radius_x = rotate_clockwise_around_point(self.radius_x[0], self.radius_x[1],
                                                                       values[0], 0, 0)
-                        self.radius_y  = rotate_clockwise_around_point(self.radius_y[0], self.radius_y[1],
+                        self.radius_y = rotate_clockwise_around_point(self.radius_y[0], self.radius_y[1],
                                                                       values[0], 0, 0)
                     else:
                         svg_ellipse_logger.warning(f"unknown rotate entry in values, {len(values)}")
@@ -69,9 +68,9 @@ class SvgEllipse:
                         self.center_x = scale_coordinate(self.center_x, values[0])
                         self.center_y = scale_coordinate(self.center_y, values[0])
                         self.radius_x = (scale_coordinate(self.radius_x[0], values[0]),
-                            scale_coordinate(self.radius_x[1], values[0]))
+                        scale_coordinate(self.radius_x[1], values[0]))
                         self.radius_y = (scale_coordinate(self.radius_y[0], values[0]),
-                            scale_coordinate(self.radius_y[1], values[0]))
+                        scale_coordinate(self.radius_y[1], values[0]))
                     elif len(values) == 2:
                         self.center_x = scale_coordinate(self.center_x, values[0])
                         self.center_y = scale_coordinate(self.center_y, values[1])

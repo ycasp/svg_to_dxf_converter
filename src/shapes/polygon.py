@@ -1,6 +1,3 @@
-from src.utilities import change_svg_to_dxf_coordinate
-
-
 class Polygon:
     """
     Represents a Polygon with several points in a point list.

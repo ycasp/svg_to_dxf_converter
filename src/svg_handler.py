@@ -1,11 +1,8 @@
 import xml.etree.ElementTree as ElementTree
 from xml.etree.ElementTree import ParseError
 
-from src.logging_config import setup_logger
 from src.scaling_functions import scale_rectangle, scale_circle, scale_ellipse, scale_line, scale_path, scale_polygon
-
 from src.svg_shapes import *
-
 
 svg_logger = setup_logger(__name__)
 
@@ -36,7 +33,7 @@ def read_svg_file(name):
         # iterate through svg content
         for element in root.iter():
             match element.tag:
-                #case '{http://www.w3.org/2000/svg}svg':
+                # case '{http://www.w3.org/2000/svg}svg':
                 #    header = SvgHeader(element)
                 #    svg_height = header.get_header_height()
                 #    svg_figures.append(header)
@@ -44,8 +41,9 @@ def read_svg_file(name):
                     circle = SvgCircle(element, svg_height)
                     if circle.radius_y == 0:
                         svg_figures.append(circle)
-                    else: # circle.radius_y != 0:
-                        element = {'cx': circle.center_x, 'cy': (-1) * circle.center_y, 'rx': circle.radius, 'ry': circle.radius_y}
+                    else:  # circle.radius_y != 0:
+                        element = {'cx': circle.center_x, 'cy': (-1) * circle.center_y, 'rx': circle.radius,
+                            'ry': circle.radius_y}
                         ellipse = SvgEllipse(element, 0)
                         svg_figures.append(ellipse)
                 case '{http://www.w3.org/2000/svg}ellipse':

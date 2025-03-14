@@ -1,9 +1,10 @@
+from src.logging_config import setup_logger
 from src.svg_shapes.transform_messages import export_transformations
 from src.utilities import translate_coordinate, rotate_clockwise_around_point, change_svg_to_dxf_coordinate, \
     scale_coordinate, skew_x, skew_y
-from src.logging_config import setup_logger
 
 svg_line_logger = setup_logger(__name__)
+
 
 class SvgLine:
 
@@ -47,10 +48,10 @@ class SvgLine:
                         self.y2 = (-1) * y2
                     elif len(values) == 3:
                         self.x1, y1 = rotate_clockwise_around_point(self.x1, -self.y1, values[0], values[1],
-                                                                         -values[2])
+                                                                    -values[2])
                         self.y1 = (-1) * y1
                         self.x2, y2 = rotate_clockwise_around_point(self.x2, -self.y2, values[0], values[1],
-                                                                         -values[2])
+                                                                    -values[2])
                         self.y2 = (-1) * y2
                     else:
                         svg_line_logger.warning(f"unknown values length for rotate, length: {len(values)}")

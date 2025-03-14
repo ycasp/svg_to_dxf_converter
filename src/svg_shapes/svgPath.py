@@ -1,13 +1,13 @@
-from svgpathtools import parse_path, Path, Line, CubicBezier, QuadraticBezier, Arc
+from svgpathtools import parse_path, Line, CubicBezier, QuadraticBezier, Arc
 from svgpathtools.parser import parse_transform
 from svgpathtools.path import transform
-import numpy as np
-import math
-from src.svg_shapes import export_transformations
+
 from src.logging_config import setup_logger
+from src.svg_shapes import export_transformations
 from src.utilities import change_svg_to_dxf_coordinate
 
 svg_path_logger = setup_logger(__name__)
+
 
 class SvgPath:
 
@@ -22,7 +22,6 @@ class SvgPath:
             self.parsed_path = transform(self.parsed_path, transform_mat)
 
         self.change_path_svg_to_dxf_coordinate(svg_height)
-
 
     def get_name(self):
         return self.name
@@ -51,7 +50,6 @@ class SvgPath:
                 segment.radius = _scale(segment.radius)
             else:
                 svg_path_logger.warning("unsupported path segment: {}".format(segment))
-
 
     """def transform(self):
         transformed_path = self.parsed_path
@@ -97,23 +95,30 @@ class SvgPath:
     def change_path_svg_to_dxf_coordinate(self, svg_height):
         for segment in self.parsed_path:
             if isinstance(segment, Line):
-                segment.start = complex(segment.start.real, change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
+                segment.start = complex(segment.start.real,
+                                        change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
                 segment.end = complex(segment.end.real, change_svg_to_dxf_coordinate(segment.end.imag, svg_height))
             elif isinstance(segment, QuadraticBezier):
-                segment.start = complex(segment.start.real, change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
+                segment.start = complex(segment.start.real,
+                                        change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
                 segment.end = complex(segment.end.real, change_svg_to_dxf_coordinate(segment.end.imag, svg_height))
-                segment.control = complex(segment.control.real, change_svg_to_dxf_coordinate(segment.control.imag, svg_height))
+                segment.control = complex(segment.control.real,
+                                          change_svg_to_dxf_coordinate(segment.control.imag, svg_height))
             elif isinstance(segment, CubicBezier):
-                segment.start = complex(segment.start.real, change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
+                segment.start = complex(segment.start.real,
+                                        change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
                 segment.end = complex(segment.end.real, change_svg_to_dxf_coordinate(segment.end.imag, svg_height))
-                segment.control1 = complex(segment.control1.real, change_svg_to_dxf_coordinate(segment.control1.imag, svg_height))
-                segment.control2 = complex(segment.control2.real, change_svg_to_dxf_coordinate(segment.control2.imag, svg_height))
+                segment.control1 = complex(segment.control1.real,
+                                           change_svg_to_dxf_coordinate(segment.control1.imag, svg_height))
+                segment.control2 = complex(segment.control2.real,
+                                           change_svg_to_dxf_coordinate(segment.control2.imag, svg_height))
 
             elif isinstance(segment, Arc):
-                segment.start = complex(segment.start.real, change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
+                segment.start = complex(segment.start.real,
+                                        change_svg_to_dxf_coordinate(segment.start.imag, svg_height))
                 segment.end = complex(segment.end.real, change_svg_to_dxf_coordinate(segment.end.imag, svg_height))
-                segment.center = complex(segment.center.real, change_svg_to_dxf_coordinate(segment.center.imag, svg_height))
+                segment.center = complex(segment.center.real,
+                                         change_svg_to_dxf_coordinate(segment.center.imag, svg_height))
 
             else:
                 svg_path_logger.warning("unsupported path segment: {}".format(segment))
-

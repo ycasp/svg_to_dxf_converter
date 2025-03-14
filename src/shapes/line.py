@@ -1,6 +1,3 @@
-from src.utilities import change_svg_to_dxf_coordinate
-
-
 class Line:
     """
     Represent a Line with start point and end point.

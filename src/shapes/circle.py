@@ -1,6 +1,3 @@
-from src.utilities import change_svg_to_dxf_coordinate
-from src.svg_shapes.svgCircle import SvgCircle
-
 class Circle:
     """
     Represents a circle with given center and radius.
@@ -10,7 +7,7 @@ class Circle:
         radius (float): radius of the circle.
     """
 
-    def __init__(self,svg_circle):
+    def __init__(self, svg_circle):
         self.center = (svg_circle.center_x, svg_circle.center_y)
         self.radius = svg_circle.radius
 

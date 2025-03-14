@@ -1,14 +1,15 @@
+from src.logging_config import setup_logger
 from src.svg_shapes import export_transformations
 from src.utilities import change_svg_to_dxf_coordinate, translate_coordinate, rotate_clockwise_around_point, \
-    scale_coordinate, scale_coordinate_svg, skew_x, change_dxf_to_svg_coordinate, skew_x_for_changed_point, \
-    skew_y_for_changed_point, skew_y, matrix_transformation
-from src.logging_config import setup_logger
+    scale_coordinate, scale_coordinate_svg, skew_x, skew_x_for_changed_point, \
+    skew_y_for_changed_point
 
 svg_rect_logger = setup_logger(__name__)
 
+
 class SvgRectangle:
 
-    def __init__(self,element, svg_height):
+    def __init__(self, element, svg_height):
         self.name = 'rectangle'
 
         self.x = float(element.get('x'))
@@ -31,7 +32,6 @@ class SvgRectangle:
         if transform is not None:
             self.transformation_list = export_transformations(transform)
             self.transform(svg_height)
-
 
     def get_name(self):
         return self.name
@@ -59,7 +59,9 @@ class SvgRectangle:
                         self.x, self.y = rotate_clockwise_around_point(self.x, self.y, values[0], 0, svg_height)
                     elif len(values) == 3:
                         self.x, self.y = rotate_clockwise_around_point(self.x, self.y,
-                                            values[0], values[1], change_svg_to_dxf_coordinate(values[2], svg_height))
+                                                                       values[0], values[1],
+                                                                       change_svg_to_dxf_coordinate(values[2],
+                                                                                                    svg_height))
                     else:
                         svg_rect_logger.warning(f"unknown rotation value, length of values: {len(values)}")
 
@@ -70,8 +72,8 @@ class SvgRectangle:
                                                                      values[0], 0, 0)
 
                     # rotate rx - if necessary
-                    if self.rx != (0, 0): # and self.ry != (0, 0)
-                        self.rx = rotate_clockwise_around_point(self.rx[0], self.rx[1], values[0], 0,0)
+                    if self.rx != (0, 0):  # and self.ry != (0, 0)
+                        self.rx = rotate_clockwise_around_point(self.rx[0], self.rx[1], values[0], 0, 0)
                         self.ry = rotate_clockwise_around_point(self.ry[0], self.ry[1], values[0], 0, 0)
                 case 'scale':
                     self.x = scale_coordinate(self.x, values[0])
@@ -85,7 +87,7 @@ class SvgRectangle:
                         rect_height_y = scale_coordinate(self.rect_height[1], values[1])
                         rx_y = scale_coordinate(self.rx[1], values[1])
                         ry_y = scale_coordinate(self.ry[1], values[1])
-                    else: # len(values) == 1
+                    else:  # len(values) == 1
                         self.y = scale_coordinate_svg(self.y, values[0], svg_height)
                         rect_width_y = scale_coordinate(self.rect_width[1], values[0])
                         rect_height_y = scale_coordinate(self.rect_height[1], values[0])
@@ -99,7 +101,8 @@ class SvgRectangle:
                 case 'skewX':
                     self.x = skew_x_for_changed_point(self.x, self.y, values[0], svg_height)
                     self.rect_width = (skew_x(self.rect_width[0], self.rect_width[1], values[0]), self.rect_width[1])
-                    self.rect_height = (skew_x(self.rect_height[0], (-1) * self.rect_height[1], values[0]), self.rect_height[1])
+                    self.rect_height = (
+                    skew_x(self.rect_height[0], (-1) * self.rect_height[1], values[0]), self.rect_height[1])
                     # TODO skewX/skewY and rounded corners
                     """
                     self.rx = (skew_x(self.rx[0], self.rx[1], values[0]), self.rx[1])
@@ -107,8 +110,10 @@ class SvgRectangle:
                     """
                 case 'skewY':
                     self.y = skew_y_for_changed_point(self.x, self.y, values[0])
-                    self.rect_width = (self.rect_width[0], skew_y_for_changed_point(self.rect_width[0], self.rect_width[1], values[0]))
-                    self.rect_height = (self.rect_height[0], skew_y_for_changed_point(self.rect_height[0], self.rect_height[1], values[0]))
+                    self.rect_width = (
+                    self.rect_width[0], skew_y_for_changed_point(self.rect_width[0], self.rect_width[1], values[0]))
+                    self.rect_height = (
+                    self.rect_height[0], skew_y_for_changed_point(self.rect_height[0], self.rect_height[1], values[0]))
                     # TODO skewX/skewY and rounded corners
                     """self.ry = (self.ry[0], skew_y(self.ry[0], self.ry[1], values[0]))
                     self.rx = (self.rx[0], skew_y(self.rx[0], self.rx[1], values[0]))"""
@@ -117,16 +122,16 @@ class SvgRectangle:
                         values.append(0)
                         values.append(0)
 
-                    new_x = values[0]*self.x - values[2]*self.y + values[2]*svg_height + values[4]
-                    new_y = - values[1]*self.x + values[3]*self.y + (1 - values[3])*svg_height - values[5]
+                    new_x = values[0] * self.x - values[2] * self.y + values[2] * svg_height + values[4]
+                    new_y = - values[1] * self.x + values[3] * self.y + (1 - values[3]) * svg_height - values[5]
                     self.x, self.y = new_x, new_y
 
-                    rect_width_x = values[0]*self.rect_width[0] + values[2]*self.rect_width[1]
-                    rect_width_y = - values[1]*self.rect_width[0] - values[3]*self.rect_width[1]
+                    rect_width_x = values[0] * self.rect_width[0] + values[2] * self.rect_width[1]
+                    rect_width_y = - values[1] * self.rect_width[0] - values[3] * self.rect_width[1]
                     self.rect_width = (rect_width_x, rect_width_y)
 
-                    rect_height_x = values[0]*self.rect_height[0] - values[2]*self.rect_height[1]
-                    rect_height_y = - values[1]*self.rect_height[0] + values[3]*self.rect_height[1]
+                    rect_height_x = values[0] * self.rect_height[0] - values[2] * self.rect_height[1]
+                    rect_height_y = - values[1] * self.rect_height[0] + values[3] * self.rect_height[1]
                     self.rect_height = (rect_height_x, rect_height_y)
                     # TODO skewX/skewY and rounded corners
                     """ 
@@ -138,6 +143,8 @@ class SvgRectangle:
                     ry_y = values[1] * self.ry[0] + values[3] * self.ry[1]
                     self.ry = (ry_x, ry_y)
                     """
+
+
 def ensure_applicable_radius(r, length):
     """
     Ensures that the radius of the curves are applicable.

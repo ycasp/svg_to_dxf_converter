@@ -1,7 +1,6 @@
 from logging_config import setup_logger
-from src.cut_rules import enforce_cut_rules
 from src.dxf_handler import write_dxf
-from src.svg_handler import read_svg_file, scale_file, scale_file_param
+from src.svg_handler import read_svg_file, scale_file_param
 
 main_logger = setup_logger(__name__)
 
@@ -24,7 +23,6 @@ if __name__ == "__main__":
     try:
         # read in svg (xml) file into tree
         svg_figures = read_svg_file(filepath + filename + ending)
-
 
         # scale file
         # svg_root = scale_file(svg_root, 266.520, 373.335)

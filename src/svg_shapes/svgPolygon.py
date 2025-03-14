@@ -1,9 +1,10 @@
+from src.logging_config import setup_logger
+from src.svg_shapes.transform_messages import export_transformations
 from src.utilities import change_svg_to_dxf_coordinate, translate_coordinate, rotate_clockwise_around_point, \
     scale_coordinate, skew_x, skew_y
-from src.svg_shapes.transform_messages import export_transformations
-from src.logging_config import setup_logger
 
 svg_polygon_logger = setup_logger(__name__)
+
 
 class SvgPolygon:
 
@@ -17,9 +18,9 @@ class SvgPolygon:
             self.transformation_list = export_transformations(transform_message)
             self.transform()
 
-        for i in range (0, len(self.point_list)):
-            self.point_list[i] = (self.point_list[i][0], change_svg_to_dxf_coordinate(self.point_list[i][1], svg_height))
-
+        for i in range(0, len(self.point_list)):
+            self.point_list[i] = (
+            self.point_list[i][0], change_svg_to_dxf_coordinate(self.point_list[i][1], svg_height))
 
     def get_name(self):
         return self.name
@@ -38,7 +39,7 @@ class SvgPolygon:
             match t_type:
                 case 'translate':
                     if len(values) == 1:
-                        for i in range (0, len_points_list):
+                        for i in range(0, len_points_list):
                             self.point_list[i] = (translate_coordinate(self.point_list[i][0], values[0]),
                             self.point_list[i][1])
                     elif len(values) == 2:
@@ -49,12 +50,14 @@ class SvgPolygon:
                         svg_polygon_logger.warning(f"unknown translate entry in values, {len(values)}")
                 case 'rotate':
                     if len(values) == 1:
-                        for i in range (0, len_points_list):
-                            rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1], values[0], 0, 0)
+                        for i in range(0, len_points_list):
+                            rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1],
+                                                                         values[0], 0, 0)
                             self.point_list[i] = (rot_x, (-1) * rot_y)
                     elif len(values) == 3:
-                        for i in range (0, len_points_list):
-                            rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1], values[0], values[1], -values[2])
+                        for i in range(0, len_points_list):
+                            rot_x, rot_y = rotate_clockwise_around_point(self.point_list[i][0], -self.point_list[i][1],
+                                                                         values[0], values[1], -values[2])
                             self.point_list[i] = (rot_x, (-1) * rot_y)
                     else:
                         svg_polygon_logger.warning(f"unknown rotate entry in values, {len(values)}")
@@ -70,11 +73,13 @@ class SvgPolygon:
                     else:
                         svg_polygon_logger.warning(f"unknown scale entry in values, {len(values)}")
                 case 'skewX':
-                    for i in range (0, len_points_list):
-                        self.point_list[i] = (skew_x(self.point_list[i][0], self.point_list[i][1], values[0]), self.point_list[i][1])
+                    for i in range(0, len_points_list):
+                        self.point_list[i] = (
+                        skew_x(self.point_list[i][0], self.point_list[i][1], values[0]), self.point_list[i][1])
                 case 'skewY':
                     for i in range(0, len_points_list):
-                        self.point_list[i] = (self.point_list[i][0], skew_y(self.point_list[i][0], self.point_list[i][1], values[0]))
+                        self.point_list[i] = (
+                        self.point_list[i][0], skew_y(self.point_list[i][0], self.point_list[i][1], values[0]))
                 case 'matrix':
                     if len(values) == 4:
                         values.append(0)

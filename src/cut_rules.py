@@ -7,6 +7,7 @@ MIN_LINE_WIDTH = 0.3
 
 cut_rules_logger = setup_logger(__name__)
 
+
 def enforce_cut_rules(root, thickness):
     min_radius = FACTOR * thickness
     min_distance_between_rail = FACTOR * thickness
@@ -32,10 +33,12 @@ def enforce_cut_rules(root, thickness):
 
     return root
 
+
 def circle_cut_rules(element, min_radius):
     # min radius
     if float(element.get('r')) < min_radius:
         cut_rules_logger.error(f"radius to small: r = {float(element.get('r'))} mm, requested: {min_radius} mm")
+
 
 def rectangle_cut_rules(element, min_radius):
     rect_width = float(element.get('width'))

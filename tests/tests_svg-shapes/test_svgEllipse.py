@@ -2,11 +2,11 @@ import unittest
 
 from src.svg_shapes.svgEllipse import *
 
+
 class TestSvgEllipse(unittest.TestCase):
     def setUp(self):
         self.svg_height = 700
-        self.normal_ellipse = {'cx':"100", 'cy':"130", 'rx':"50", 'ry':"30"}
-
+        self.normal_ellipse = {'cx': "100", 'cy': "130", 'rx': "50", 'ry': "30"}
 
     def test_initialization(self):
         normal_ellipse = SvgEllipse(self.normal_ellipse, self.svg_height)
@@ -16,11 +16,9 @@ class TestSvgEllipse(unittest.TestCase):
         self.assertEqual(normal_ellipse.radius_y, (0, 30))
         self.assertEqual(normal_ellipse.name, 'ellipse')
 
-
     def test_getters(self):
         normal_ellipse = SvgEllipse(self.normal_ellipse, self.svg_height)
         self.assertEqual(normal_ellipse.get_name(), 'ellipse')
-
 
     def test_transform(self):
         self.normal_ellipse['transform'] = 'translate(20)'

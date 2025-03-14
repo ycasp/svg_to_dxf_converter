@@ -5,7 +5,7 @@ from svgpathtools.path import CubicBezier, QuadraticBezier, Arc
 from svgpathtools.path import Line as svgLine
 
 from src.logging_config import setup_logger
-from src.utilities import rad_to_degree, rotate_clockwise_around_cartesian_origin, change_svg_to_dxf_coordinate
+from src.utilities import rad_to_degree, rotate_clockwise_around_cartesian_origin
 
 path_logger = setup_logger(__name__)
 
@@ -40,7 +40,6 @@ class Path:
         :param msp: Modelspace of the dxf file, to add the entities.
         :return: -
         """
-
 
         for segment in self.parsed_path:
             if isinstance(segment, svgLine):

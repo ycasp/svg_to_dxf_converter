@@ -2,13 +2,13 @@ import unittest
 
 from src.svg_shapes.svgCircle import *
 
+
 class TestSvgCircle(unittest.TestCase):
 
     def setUp(self):
         self.normal_circle = {'cx': '100', 'cy': '100', 'r': '50'}
         self.rot_circle = {'cx': '100', 'cy': '100', 'r': '50', 'transform': 'rotate(90)'}
         self.svg_height = 300
-
 
     def test_initialization(self):
         circle = SvgCircle(self.normal_circle, self.svg_height)

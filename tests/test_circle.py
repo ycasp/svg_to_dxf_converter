@@ -1,9 +1,9 @@
 import unittest
+from unittest.mock import Mock
 
 from src.shapes.circle import Circle
 from src.svg_shapes import SvgCircle
 from src.utilities import change_svg_to_dxf_coordinate
-from unittest.mock import Mock
 
 
 class TestCircle(unittest.TestCase):

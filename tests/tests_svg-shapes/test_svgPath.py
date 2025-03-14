@@ -1,11 +1,14 @@
 import unittest
-from svgpathtools import Path, Line, CubicBezier, QuadraticBezier, Arc
+
+from svgpathtools import Path
+
 from src.svg_shapes.svgPath import *
+
 
 class TestSvgPath(unittest.TestCase):
     def setUp(self):
         self.svg_height = 1000
-        self.path_element = {'d':"M100 100 L200 100 Q250 50, 300 100 C350 150, 450 50, 500 100 A50 50 0 0 1 600 100"}
+        self.path_element = {'d': "M100 100 L200 100 Q250 50, 300 100 C350 150, 450 50, 500 100 A50 50 0 0 1 600 100"}
 
     def assertComplexAlmostEqual(self, a, b, places=4):
         self.assertAlmostEqual(a.real, b.real, places=places)
@@ -29,33 +32,34 @@ class TestSvgPath(unittest.TestCase):
         basic_path = SvgPath(self.path_element, self.svg_height)
         basic_path.scale(0.5, 0.5)
         scaled_parsed_path = Path(Line(complex(50, 450), complex(100, 450)),
-                                 QuadraticBezier(complex(100, 450), complex(125, 475), complex(150, 450)),
-                                 CubicBezier(complex(150, 450), complex(175, 425), complex(225, 475),
-                                             complex(250, 450)),
-                                 Arc(complex(250, 450), complex(25, 25), 0, False, True,
-                                     complex(300, 450)))
+                                  QuadraticBezier(complex(100, 450), complex(125, 475), complex(150, 450)),
+                                  CubicBezier(complex(150, 450), complex(175, 425), complex(225, 475),
+                                              complex(250, 450)),
+                                  Arc(complex(250, 450), complex(25, 25), 0, False, True,
+                                      complex(300, 450)))
         self.assertEqual(basic_path.parsed_path, scaled_parsed_path)
 
     def test_transform(self):
         self.path_element['transform'] = "translate(30)"
         x_translate_path = SvgPath(self.path_element, self.svg_height)
         x_translate_parsed_path = Path(Line(complex(100 + 30, 900), complex(200 + 30, 900)),
-                                 QuadraticBezier(complex(200 + 30, 900), complex(250 + 30, 950),
-                                                 complex(300 + 30, 900)),
-                                 CubicBezier(complex(300 + 30, 900), complex(350 + 30, 850), complex(450 + 30, 950),
-                                             complex(500 + 30, 900)),
-                                 Arc(complex(500 + 30, 900), complex(50, 50), 0, False, True,
-                                     complex(600 + 30, 900)))
+                                       QuadraticBezier(complex(200 + 30, 900), complex(250 + 30, 950),
+                                                       complex(300 + 30, 900)),
+                                       CubicBezier(complex(300 + 30, 900), complex(350 + 30, 850),
+                                                   complex(450 + 30, 950),
+                                                   complex(500 + 30, 900)),
+                                       Arc(complex(500 + 30, 900), complex(50, 50), 0, False, True,
+                                           complex(600 + 30, 900)))
         self.assertEqual(x_translate_path.parsed_path, x_translate_parsed_path)
 
         self.path_element['transform'] = "translate(-10, 90)"
         translated_path = SvgPath(self.path_element, self.svg_height)
         translated_parsed_path = Path(Line(complex(90, 810), complex(190, 810)),
-                                 QuadraticBezier(complex(190, 810), complex(240, 860), complex(290, 810)),
-                                 CubicBezier(complex(290, 810), complex(340, 760), complex(440, 860),
-                                             complex(490, 810)),
-                                 Arc(complex(490, 810), complex(50, 50), 0, False, True,
-                                     complex(590, 810)))
+                                      QuadraticBezier(complex(190, 810), complex(240, 860), complex(290, 810)),
+                                      CubicBezier(complex(290, 810), complex(340, 760), complex(440, 860),
+                                                  complex(490, 810)),
+                                      Arc(complex(490, 810), complex(50, 50), 0, False, True,
+                                          complex(590, 810)))
         self.assertEqual(translated_path.parsed_path, translated_parsed_path)
 
         self.path_element['transform'] = "rotate(19)"
@@ -153,23 +157,22 @@ class TestSvgPath(unittest.TestCase):
         self.path_element['transform'] = "scale(0.5)"
         scaled_path = SvgPath(self.path_element, self.svg_height)
         scaled_parsed_path = Path(Line(complex(50, 950), complex(100, 950)),
-                                 QuadraticBezier(complex(100, 950), complex(125, 975), complex(150, 950)),
-                                 CubicBezier(complex(150, 950), complex(175, 925), complex(225, 975),
-                                             complex(250, 950)),
-                                 Arc(complex(250, 950), complex(25, 25), 0, False, True,
-                                     complex(300, 950)))
+                                  QuadraticBezier(complex(100, 950), complex(125, 975), complex(150, 950)),
+                                  CubicBezier(complex(150, 950), complex(175, 925), complex(225, 975),
+                                              complex(250, 950)),
+                                  Arc(complex(250, 950), complex(25, 25), 0, False, True,
+                                      complex(300, 950)))
         self.assertEqual(scaled_path.parsed_path, scaled_parsed_path)
 
         self.path_element['transform'] = "matrix(2.5, 0.5, -0.5, 4, 100, 50)"
         mat_path = SvgPath(self.path_element, self.svg_height)
         mat_parsed_path = Path(Line(complex(300, 500), complex(550, 450)),
-                                 QuadraticBezier(complex(550, 450), complex(700, 625), complex(800, 400)),
-                                 CubicBezier(complex(800, 400), complex(900, 175), complex(1200, 525),
-                                             complex(1300, 300)))
+                               QuadraticBezier(complex(550, 450), complex(700, 625), complex(800, 400)),
+                               CubicBezier(complex(800, 400), complex(900, 175), complex(1200, 525),
+                                           complex(1300, 300)))
         arc = mat_path.parsed_path.__getitem__(3)
         mat_path.parsed_path.__delitem__(3)
         self.assertEqual(mat_path.parsed_path, mat_parsed_path)
         self.assertComplexAlmostEqual(arc.start, complex(1300, 300), 4)
         self.assertComplexAlmostEqual(arc.radius, complex(126.9118, 201.9118), 4)
         self.assertComplexAlmostEqual(arc.end, complex(1550, 250))
-

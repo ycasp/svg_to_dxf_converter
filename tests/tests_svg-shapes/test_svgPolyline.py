@@ -2,10 +2,11 @@ import unittest
 
 from src.svg_shapes.svgPolyline import *
 
+
 class TestSvgPolyline(unittest.TestCase):
     def setUp(self):
         self.svg_height = 800
-        self.polyline_element = {'points':"100,100 150,150 200,80 250,165 300,50"}
+        self.polyline_element = {'points': "100,100 150,150 200,80 250,165 300,50"}
 
     def test_initialization(self):
         basic_polyline = SvgPolyline(self.polyline_element, self.svg_height)
@@ -25,18 +26,20 @@ class TestSvgPolyline(unittest.TestCase):
     def test_transformation(self):
         self.polyline_element['transform'] = 'translate(-34)'
         x_translated_polyline = SvgPolyline(self.polyline_element, self.svg_height)
-        self.assertListEqual(x_translated_polyline.point_list, [(66, 700), (116, 650), (166, 720), (216, 635), (266, 750)])
+        self.assertListEqual(x_translated_polyline.point_list,
+                             [(66, 700), (116, 650), (166, 720), (216, 635), (266, 750)])
 
         self.polyline_element['transform'] = 'translate(28, 41)'
         translated_polyline = SvgPolyline(self.polyline_element, self.svg_height)
-        self.assertListEqual(translated_polyline.point_list, [(128, 659), (178, 609), (228, 679), (278, 594), (328, 709)])
+        self.assertListEqual(translated_polyline.point_list,
+                             [(128, 659), (178, 609), (228, 679), (278, 594), (328, 709)])
 
         self.polyline_element['transform'] = 'rotate(273)'
         rotated_polyline = SvgPolyline(self.polyline_element, self.svg_height)
         rotated_points = [(105.09655, self.svg_height + 94.62936), (157.64482, self.svg_height + 141.94404),
             (90.35755, self.svg_height + 195.53903), (177.85786, self.svg_height + 241.02195),
             (65.63226, self.svg_height + 296.97206)]
-        for i in range (0, 3):
+        for i in range(0, 3):
             self.assertAlmostEqual(rotated_polyline.point_list[i][0], rotated_points[i][0], 5)
             self.assertAlmostEqual(rotated_polyline.point_list[i][1], rotated_points[i][1], 5)
 

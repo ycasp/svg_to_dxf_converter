@@ -1,7 +1,7 @@
 import math
 
-from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin, calculate_euclidean_norm
-from src.svg_shapes.svgEllipse import SvgEllipse
+from src.utilities import calculate_euclidean_norm
+
 
 class Ellipse:
     """

@@ -1,9 +1,6 @@
 import math
 
-from src.shapes.ellipse import Ellipse
-from src.svg_shapes import SvgEllipse
-from src.utilities import change_svg_to_dxf_coordinate, export_rotation, rotate_clockwise_around_svg_origin, \
-    calculate_euclidean_norm
+from src.utilities import calculate_euclidean_norm
 
 
 class Rectangle:
@@ -31,7 +28,7 @@ class Rectangle:
     # draws a rectangle form the given svg data (from a rect attribute) into a dxf modelspace
     def draw_dxf_rect(self, msp, height):
         if self.rx == (0, 0) and self.ry == (0, 0):
-            vertices = [ (self.x, self.y), (self.x + self.rect_width[0], self.y + self.rect_width[1]),
+            vertices = [(self.x, self.y), (self.x + self.rect_width[0], self.y + self.rect_width[1]),
                 (self.x + self.rect_width[0] + self.rect_height[0], self.y + self.rect_width[1] + self.rect_height[1]),
                 (self.x + self.rect_height[0], self.y + self.rect_height[1])]
             msp.add_lwpolyline(vertices, close=True)
@@ -42,28 +39,28 @@ class Rectangle:
         # define corner points
         # top left vertice, after arc
         p1 = (self.x + self.rx[0],
-                self.y + self.rx[1])
+        self.y + self.rx[1])
         # top right vertice, before arc
         p2 = (self.x + self.rect_width[0] - self.rx[0],
-                self.y + self.rect_width[1] - self.rx[1])
+        self.y + self.rect_width[1] - self.rx[1])
         # top right vertice, after arc
         p3 = (self.x + self.rect_width[0] - self.ry[0],
-                self.y + self.rect_width[1] - self.ry[1])
+        self.y + self.rect_width[1] - self.ry[1])
         # bottem right vertice, before arc
         p4 = (self.x + self.rect_width[0] + self.rect_height[0] + self.ry[0],
-                self.y + self.rect_width[1] + self.rect_height[1] + self.ry[1])
+        self.y + self.rect_width[1] + self.rect_height[1] + self.ry[1])
         # bottom right vertice, after arc
         p5 = (self.x + self.rect_width[0] + self.rect_height[0] - self.rx[0],
-                self.y + self.rect_width[1] +self.rect_height[1] - self.rx[1])
+        self.y + self.rect_width[1] + self.rect_height[1] - self.rx[1])
         # bottom left vertice, before arc
         p6 = (self.x + self.rect_height[0] + self.rx[0],
-                self.y + self.rect_height[1] + self.rx[1])
+        self.y + self.rect_height[1] + self.rx[1])
         # bottom left vertice, after arc
         p7 = (self.x + self.rect_height[0] + self.ry[0],
-                self.y + self.rect_height[1] + self.ry[1])
+        self.y + self.rect_height[1] + self.ry[1])
         # top left vertice, before arc
         p8 = (self.x - self.ry[0],
-                self.y - self.ry[1])
+        self.y - self.ry[1])
 
         # add edges
         msp.add_line(p1, p2)  # top edge
@@ -84,31 +81,31 @@ class Rectangle:
         else:
             major_axis = self.ry
             ratio = norm_rx / norm_ry
-            rot_flag = 1/2 * math.pi
+            rot_flag = 1 / 2 * math.pi
 
         # top right arc
         c1 = (self.x + self.rect_width[0] - self.rx[0] - self.ry[0],
-                self.y + self.rect_width[1] - self.rx[1] - self.ry[1])
-        msp.add_ellipse(center= c1, major_axis= major_axis, ratio= ratio,
-                        start_param= 0 - rot_flag, end_param= 1/2 * math.pi - rot_flag)
+        self.y + self.rect_width[1] - self.rx[1] - self.ry[1])
+        msp.add_ellipse(center=c1, major_axis=major_axis, ratio=ratio,
+                        start_param=0 - rot_flag, end_param=1 / 2 * math.pi - rot_flag)
 
         # bottom right arc
         c2 = (self.x + self.rect_width[0] + self.rect_height[0] - self.rx[0] + self.ry[0],
-                self.y + self.rect_width[1] + self.rect_height[1] - self.rx[1] + self.ry[1])
+        self.y + self.rect_width[1] + self.rect_height[1] - self.rx[1] + self.ry[1])
         msp.add_ellipse(center=c2, major_axis=major_axis, ratio=ratio,
-                        start_param=3 / 2 * math.pi - rot_flag, end_param= 2 * math.pi - rot_flag)
+                        start_param=3 / 2 * math.pi - rot_flag, end_param=2 * math.pi - rot_flag)
 
         # bottem left arc
         c3 = (self.x + self.rect_height[0] + self.rx[0] + self.ry[0],
-                self.y + self.rect_height[1] + self.rx[1] + self.ry[1])
+        self.y + self.rect_height[1] + self.rx[1] + self.ry[1])
         msp.add_ellipse(center=c3, major_axis=major_axis, ratio=ratio,
                         start_param=math.pi - rot_flag, end_param=3 / 2 * math.pi - rot_flag)
 
         # top left arc
         c4 = (self.x + self.rx[0] - self.ry[0],
-                self.y + self.rx[1] - self.ry[1])
+        self.y + self.rx[1] - self.ry[1])
         msp.add_ellipse(center=c4, major_axis=major_axis, ratio=ratio,
-                        start_param=1/2 * math.pi - rot_flag, end_param= math.pi - rot_flag)
+                        start_param=1 / 2 * math.pi - rot_flag, end_param=math.pi - rot_flag)
         """
         rx = self.rx
         ry = self.ry
@@ -163,4 +160,3 @@ class Rectangle:
         c4 = Ellipse(top_left_ellipse, 1 / 2 * math.pi, math.pi)
         c4.draw_dxf_ellipse(msp)
         """
-

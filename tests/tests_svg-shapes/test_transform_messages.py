@@ -42,11 +42,11 @@ class TestTransformMessages(unittest.TestCase):
         self.assertEqual(transform_list[0], ('skewX', [25]))
         self.assertEqual(transform_list[1], ('skewY', [15]))
 
-        matrix_transform="matrix(1, 0.5, -0.5, 1, 20, 40)"
+        matrix_transform = "matrix(1, 0.5, -0.5, 1, 20, 40)"
         transform_list = export_transformations(matrix_transform)
         self.assertEqual(len(transform_list), 1)
         self.assertEqual(transform_list[0], ('matrix', [1, 0.5, -0.5, 1, 20, 40]))
 
-        crazy_transform="translate(10,20) rotate(90,30,30) scale(1.2,0.8) skewX(10) skewY(5) matrix(1, 0, 0, 1, 5, 5)"
+        crazy_transform = "translate(10,20) rotate(90,30,30) scale(1.2,0.8) skewX(10) skewY(5) matrix(1, 0, 0, 1, 5, 5)"
         transform_list = export_transformations(crazy_transform)
         self.assertEqual(len(transform_list), 6)

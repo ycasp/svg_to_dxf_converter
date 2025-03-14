@@ -1,9 +1,9 @@
 import unittest
+from unittest.mock import Mock
 
 from src.shapes.line import Line
 from src.svg_shapes import SvgLine
 from src.utilities import change_svg_to_dxf_coordinate
-from unittest.mock import Mock
 
 
 class TestLine(unittest.TestCase):
@@ -21,7 +21,6 @@ class TestLine(unittest.TestCase):
 
         element_negative_line = {'x1': -10, 'y1': -20, 'x2': -30, 'y2': -40}
         self.negative_line = SvgLine(element_negative_line, self.svg_height)
-
 
     def test_initialization(self):
         """Test that the Line object initializes correctly."""
