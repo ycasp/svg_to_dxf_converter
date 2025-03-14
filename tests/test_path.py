@@ -3,7 +3,8 @@ import unittest
 from unittest.mock import Mock, MagicMock, patch
 from src.shapes.path import Path, draw_circular_arc, draw_rotated_elliptic_arc, approximate_cubic_bezier_curve, \
     approximate_quadratic_bezier_curve
-from svgpathtools import parse_path
+from svgpathtools import parse_path, CubicBezier, QuadraticBezier, Arc, Line
+from svgpathtools import Path as LibPath
 
 from src.svg_shapes import SvgPath
 from src.utilities import change_svg_to_dxf_coordinate
@@ -18,17 +19,15 @@ class TestPath(unittest.TestCase):
         element_path = {'d': "M 50,250 L 150,50 C 200,150 300,150 350,50 Q 400,0 450,50 A 50,25 45 1 1 400,150 "
                 "L 300,250 C 250,350 150,350 100,250 Q 75,200 50,250 Z"}
 
-        self.svg_test_path = SvgPath(element_path, 0)
+        self.svg_test_path = SvgPath(element_path, self.svg_height)
 
-        element_complicated_path = {'d': "M 50,250 L 150,50 C 200,150 300,150 350,50 Q 400,0 450,50 A 50,25 45 1 1 400,150 "
+        element_complicated_path = {'d': "M 50,250 L 150,50 C 200,150 300,150 350,50 Q 400,0 450,50 A 80, 40 60 0 1 400,150 "
                 "L 300,250 C 250,350 150,350 100,250 Q 75,200 50,250 A 50,50 0 1 1 150,250 Z"}
         self.svg_complicated_path = SvgPath(element_complicated_path, self.svg_height)
 
     def test_initialization(self):
-        test_path = Path(self.svg_test_path)
-
-        self.assertEqual(test_path.path, "M 50,250 L 150,50 C 200,150 300,150 350,50 Q 400,0 450,50 A 50,25 45 1 1 400,150 "
-                "L 300,250 C 250,350 150,350 100,250 Q 75,200 50,250 Z")
+        test_path = Path(self.svg_complicated_path)
+        self.assertEqual(test_path.parsed_path, self.svg_complicated_path.parsed_path)
 
     @patch("src.shapes.path.approximate_cubic_bezier_curve")
     @patch("src.shapes.path.approximate_quadratic_bezier_curve")
@@ -38,7 +37,7 @@ class TestPath(unittest.TestCase):
 
         test_path = Path(self.svg_complicated_path)
 
-        test_path.draw_svg_path(self.msp_mock, self.svg_height)
+        test_path.draw_svg_path(self.msp_mock)
 
         assert self.msp_mock.add_line.call_count == 3
 
@@ -175,9 +174,9 @@ class TestPath(unittest.TestCase):
         mock_from_vertices.return_value = mock_dxf_path
 
         height = 400
-        path = "M 150.0,50.0 C 200.0,150.0 300.0,150.0 350.0,50.0"
-        cubic_bezier_curve = parse_path(path)[0]
-        approximate_cubic_bezier_curve(cubic_bezier_curve, self.msp_mock, height)
+        path_el = {'d':"M 150.0,50.0 C 200.0,150.0 300.0,150.0 350.0,50.0"}
+        cubic_bez_path = SvgPath(path_el, height)
+        approximate_cubic_bezier_curve(cubic_bez_path.parsed_path.__getitem__(0), self.msp_mock)
 
         mock_from_vertices.assert_called_once_with([(0,0)])
 
@@ -195,9 +194,9 @@ class TestPath(unittest.TestCase):
         mock_from_vertices.return_value = mock_dxf_path
 
         height = 400
-        path = "M 150.0,50.0 Q 200.0,150.0 350.0,50.0"
-        quadratic_bezier_curve = parse_path(path)[0]
-        approximate_quadratic_bezier_curve(quadratic_bezier_curve, self.msp_mock, height)
+        path = {'d':"M 150.0,50.0 Q 200.0,150.0 350.0,50.0"}
+        quadratic_bezier_curve = SvgPath(path, height)
+        approximate_quadratic_bezier_curve(quadratic_bezier_curve.parsed_path.__getitem__(0), self.msp_mock)
 
         mock_from_vertices.assert_called_once_with([(0,0)])
 
