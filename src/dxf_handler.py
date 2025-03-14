@@ -40,7 +40,7 @@ def write_dxf(svg_figures, filename):
                 ell.draw_dxf_ellipse(msp)
             case 'rectangle':
                 rect = Rectangle(figure)
-                rect.draw_dxf_rect(msp, svg_height)
+                rect.draw_dxf_rect(msp)
                 # print('rectangle: ', element.tag, element.attrib)
             case 'line':
                 line = Line(figure)
