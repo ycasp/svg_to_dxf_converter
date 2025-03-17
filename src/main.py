@@ -18,18 +18,17 @@ if __name__ == "__main__":
     # /dohner ag/
     # /fonts/
     filepath = "C:/Users/ycasp/Documents/Projekt Lukas/svg collection/dohner ag/"
-    filename = "Goat"
+    filename = "Wedding01_wAnchor"
     ending = ".svg"
     try:
         # read in svg (xml) file into tree
         svg_figures = read_svg_file(filepath + filename + ending)
 
         # scale file
-        scale = 2
+        scale = 0.1
 
-        svg_figures = scale_file(svg_figures, 286.242, 254.179)
-
-        #svg_figures = scale_file_param(svg_figures, scale, scale)
+        #svg_figures = scale_file(svg_figures, 286.242, 254.179)
+        svg_figures = scale_file_param(svg_figures, scale, scale)
 
         # cut rules
         # enforce_cut_rules(svg_root, 2)
