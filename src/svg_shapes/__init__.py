@@ -6,3 +6,4 @@ from src.svg_shapes.svgPath import *
 from src.svg_shapes.svgPolygon import *
 from src.svg_shapes.svgPolyline import *
 from src.svg_shapes.svgRectangle import *
+from src.svg_shapes.svgText import *

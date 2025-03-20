@@ -55,6 +55,10 @@ def read_svg_file(name):
                     svg_figures.append(SvgPolyline(element, svg_height))
                 case '{http://www.w3.org/2000/svg}path':
                     svg_figures.append(SvgPath(element, svg_height))
+                case '{http://www.w3.org/2000/svg}text':
+                    text = SvgTest(element, svg_height)
+                #case '{http://www.w3.org/2000/svg}tspan':
+                #    text = SvgTest(element, svg_height)
                 case _:
                     svg_logger.info(f"svg_element without matching figure tag: {element.tag}: {element.attrib}")
 

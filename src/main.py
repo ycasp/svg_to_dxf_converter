@@ -17,8 +17,8 @@ if __name__ == "__main__":
     # /fruits and veggies/
     # /dohner ag/
     # /fonts/
-    filepath = "C:/Users/ycasp/Documents/Projekt Lukas/svg collection/dohner ag/"
-    filename = "Wedding01_wAnchor"
+    filepath = "C:/Users/ycasp/Documents/Projekt Lukas/svg collection/fonts/"
+    filename = "font_test"
     ending = ".svg"
     try:
         # read in svg (xml) file into tree
